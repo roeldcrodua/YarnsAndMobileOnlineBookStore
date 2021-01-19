@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using YarnsAndMobileRCOnlineBookStore.Models.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Models
 {
@@ -19,5 +20,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
 
         [Column(TypeName = "decimal(5,2)")]
         public Decimal SalePrice { get; set; }
+        [Required]
+        public virtual Member Member { get; set; }
+        [Required]
+        public virtual Book Books { get; set; }
     }
 }

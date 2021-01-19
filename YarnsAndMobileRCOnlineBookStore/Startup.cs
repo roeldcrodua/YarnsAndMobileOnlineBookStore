@@ -34,7 +34,6 @@ namespace YarnsAndMobileRCOnlineBookStore
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<Member>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddRoles<IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
@@ -45,7 +44,7 @@ namespace YarnsAndMobileRCOnlineBookStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<Member> userManager, ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -58,6 +57,15 @@ namespace YarnsAndMobileRCOnlineBookStore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            dbContext.Database.EnsureDeleted();
+
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+            }
+
+            ApplicationDbInitializer.SeedUsers(userManager);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

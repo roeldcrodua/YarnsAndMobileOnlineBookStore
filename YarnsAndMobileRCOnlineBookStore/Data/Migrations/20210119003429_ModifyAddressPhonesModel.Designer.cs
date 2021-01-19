@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210119003429_ModifyAddressPhonesModel")]
+    partial class ModifyAddressPhonesModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3fc97849-c0ab-4ccb-ade9-3c6546c5d27f",
-                            ConcurrencyStamp = "fbeb528a-bfc1-4810-a693-eca1dc0e0e25",
+                            Id = "632f91f4-af7d-4eb3-adae-f374967f3740",
+                            ConcurrencyStamp = "7869c1cf-7066-4fc6-90fb-ff800269c230",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -206,9 +208,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("AuthorLastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BooksBookId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CopyrightYear")
                         .HasColumnType("int");
 
@@ -218,9 +217,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MemberId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(5,2)");
 
@@ -228,10 +224,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookId");
-
-                    b.HasIndex("BooksBookId");
-
-                    b.HasIndex("MemberId");
 
                     b.ToTable("Books");
                 });
@@ -363,12 +355,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<DateTime?>("ReviewDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("SaleDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("SalePrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("StarRating")
                         .HasColumnType("int");
 
@@ -464,21 +450,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Book", b =>
-                {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Book", "Books")
-                        .WithMany()
-                        .HasForeignKey("BooksBookId");
-
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId");
-
-                    b.Navigation("Books");
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", b =>

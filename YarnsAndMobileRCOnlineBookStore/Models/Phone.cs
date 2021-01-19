@@ -9,11 +9,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
 {
     public class Phone
     {
-        [Key]
         public int PhoneId { get; set; }
-        public int AreaCode { get; set; }
-        public int PhoneNumber { get; set; }
-        public int Extension { get; set; }
-        public virtual IEnumerable<Member> Members { get; set; }
+        public string Phone1 { get; set; }
+        public string Phone2 { get; set; }
+        public string Phone3 { get; set; }
     }
 }

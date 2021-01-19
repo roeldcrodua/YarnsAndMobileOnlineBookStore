@@ -18,6 +18,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         public virtual Book Books { get; set; }
         public virtual Member Members{ get; set; }
         public DateTime? ReviewDate { get; set; }
-
+        public decimal? SalePrice { get; set; }
+        public DateTime? SaleDate { get; set; }
     }
 }
