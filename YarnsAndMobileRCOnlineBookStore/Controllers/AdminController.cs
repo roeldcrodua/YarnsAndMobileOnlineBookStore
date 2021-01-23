@@ -12,6 +12,8 @@ using YarnsAndMobileRCOnlineBookStore.Models.Data;
 using Newtonsoft.Json;
 using YarnsAndMobileRCOnlineBookStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using YarnsAndMobileRCOnlineBookStore.Models.ImportModels;
+using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -34,39 +36,43 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             return View();
         }
 
-        public IActionResult ImportData()
+        [Route("Admin")]
+        public void ImportData()
         {
             var userAdmin = _userManager.GetUserId(User);
             ApplicationDbInitializer.SeedUsers(_userManager, userAdmin);
+
 
             var bookKeyMap = LoadBooks();
             var memberKeyMap = LoadMembers();
             LoadSalesAndReviews(bookKeyMap, memberKeyMap);
 
-            return RedirectToAction(nameof(Index));
         }
 
-        private Dictionary<int, int> LoadMembers()
+        private Dictionary<int, string> LoadMembers()
         {
             var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_Member.json");
-            var importMembers = JsonConvert.DeserializeObject<List<Member>>(jsonFile);
+            var importMembers = JsonConvert.DeserializeObject<List<MemberImport>>(jsonFile);
 
-            var keyValue = new Dictionary<int, int>();
+            var keyValue = new Dictionary<int, string>();
             foreach (var importMember in importMembers)
             {
                 var address = new Address
                 {
-                    Street = $"{importMember.Addresses.Line1} {importMember.Addresses.Line2}",
-                    City = importMember.Addresses.City,
-                    State = importMember.Addresses.State,
-                    Zip = importMember.Addresses.Zip
+                    Line1 = importMember.Line1,
+                    Line2 = importMember.Line2,
+                    Street = importMember.Street,
+                    City = importMember.City,
+                    State = importMember.State,
+                    Zip = importMember.Zip
                 };
 
                 var phone = new Phone
                 {
-                    Phone1 = importMember.PhoneNumbers.Phone1,
-                    Phone2 = importMember.PhoneNumbers.Phone2,
-                    Phone3 = importMember.PhoneNumbers.Phone3,
+                    Phone1 = importMember.Phone1,
+                    Phone2 = importMember.Phone2,
+                    Phone3 = importMember.Phone3,
+                    Phone4 = importMember.Phone4,
                 };
 
                 var member = new Member
@@ -79,7 +85,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
 
                 member.PhoneNumbers = phone;
                 member.Addresses = address;
-                keyValue.Add(importMember.MemberId, member.MemberId);
+                _dbContext.Members.Add(member);
+                keyValue.Add(importMember.Id, member.Id);
 
             }
             _dbContext.SaveChanges();
@@ -89,7 +96,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         private Dictionary<int, int> LoadBooks()
         {
             var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_Book.json");
-            var importBooks = JsonConvert.DeserializeObject<List<Book>>(jsonFile);
+            var importBooks = JsonConvert.DeserializeObject<List<BookImport>>(jsonFile);
 
             var keyValue = new Dictionary<int, int>();
             foreach (var importBook in importBooks)
@@ -98,32 +105,29 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 {
                     AuthorFirstName = importBook.AuthorFirstName,
                     AuthorLastName = importBook.AuthorLastName,
-                    CopyrightYear = (short)importBook.CopyrightYear.GetValueOrDefault(),
+                    CopyrightYear = importBook.Year,
                     Image = importBook.Image,
                     ISBN = importBook.ISBN,
-                    SalePrice = importBook.SalePrice,
+                    SalePrice = importBook.Price,
                     Title = importBook.Title
                 };
                 _dbContext.Books.Add(book);
                 _dbContext.SaveChanges();
-                keyValue.Add(importBook.BookId, book.BookId);
+                keyValue.Add(importBook.Id, book.BookId);
             }
             _dbContext.SaveChanges();
             return keyValue;
         }
 
-        private void LoadSalesAndReviews(Dictionary<int, int> bookKeyMap, Dictionary<int, int> memberKeyMap)
+        private void LoadSalesAndReviews(Dictionary<int, int> bookKeyMap, Dictionary<int, string> memberKeyMap)
         {
             var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_SaleReview.json");
-            var importSaleReviews = JsonConvert.DeserializeObject<List<Review>>(jsonFile);
-
-            bookKeyMap = LoadBooks();
-            memberKeyMap = LoadMembers();
+            var importSaleReviews = JsonConvert.DeserializeObject<List<SaleReviewImport>>(jsonFile);
 
             foreach (var importSaleReview in importSaleReviews)
             {
-                var book = _dbContext.Books.Find(bookKeyMap[importSaleReview.Books.BookId]);
-                var member = _dbContext.Members.Find(memberKeyMap[importSaleReview.Members.MemberId]);
+                var book = _dbContext.Books.Find(bookKeyMap[importSaleReview.BookId]);
+                var member = _dbContext.Members.Find(memberKeyMap[importSaleReview.MemberId]);
 
                 if (importSaleReview.SaleDate.HasValue)
                 {
@@ -131,6 +135,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     {
                         PurchaseDate = importSaleReview.SaleDate.GetValueOrDefault(),
                         Price = importSaleReview.SalePrice.GetValueOrDefault(),
+                        Title = book.Title,
                         Books = book,
                         Members = member
                     };
@@ -141,9 +146,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     var review = new Review
                     {
                         ReviewDate = importSaleReview.ReviewDate.GetValueOrDefault(),
-                        Title = importSaleReview.Title,
-                        Text = importSaleReview.Text,
-                        StarRating = importSaleReview.StarRating,
+                        Title = importSaleReview.ReviewTitle,
+                        Text = importSaleReview.ReviewBody,
+                        StarRating = importSaleReview.ReviewRating,
                         Books = book,
                         Members = member
                     };
