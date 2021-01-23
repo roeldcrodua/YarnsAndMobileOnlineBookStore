@@ -33,8 +33,7 @@ namespace YarnsAndMobileRCOnlineBookStore
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<Member>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddDefaultUI()
+            services.AddDefaultIdentity<Member>()
                 .AddRoles<IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

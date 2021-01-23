@@ -34,6 +34,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Data
 
             // https://stackoverflow.com/questions/50785009/how-to-seed-an-admin-user-in-ef-core-2-1-0
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
+
         }
     }
 }

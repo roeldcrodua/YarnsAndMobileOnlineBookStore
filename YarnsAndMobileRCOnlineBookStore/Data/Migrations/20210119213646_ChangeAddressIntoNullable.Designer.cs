@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210119213646_ChangeAddressIntoNullable")]
+    partial class ChangeAddressIntoNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c4c02cd8-6853-436b-a7eb-a91dfd55e385",
-                            ConcurrencyStamp = "dcb2c15a-8b2e-4acd-bd1b-24f67890390e",
+                            Id = "10243169-ef31-418e-9cbe-89c6f37bc5d5",
+                            ConcurrencyStamp = "c085e458-1950-446e-8efe-97fbc470e2d8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -185,8 +187,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Zip")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Zip")
+                        .HasColumnType("int");
 
                     b.HasKey("AddressId");
 
@@ -342,9 +344,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Phone3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone4")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("PhoneId");
 
                     b.ToTable("Phones");
@@ -372,7 +371,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<decimal?>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("StarRating")
+                    b.Property<int>("StarRating")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -404,7 +403,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");

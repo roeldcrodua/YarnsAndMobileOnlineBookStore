@@ -11,7 +11,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Data
     {
         public static void SeedUsers(UserManager<Member> userManager, string userId = null)
         {
-            if (userManager.FindByEmailAsync("jb@yarnsandmobile.com").Result == null)
+            if (userManager.FindByEmailAsync("admin@yarnsandmobile.com").Result == null)
             {
                 var user = new Member
                 {

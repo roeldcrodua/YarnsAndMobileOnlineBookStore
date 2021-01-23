@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210119222644_ChangeZipFromIntToString")]
+    partial class ChangeZipFromIntToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c4c02cd8-6853-436b-a7eb-a91dfd55e385",
-                            ConcurrencyStamp = "dcb2c15a-8b2e-4acd-bd1b-24f67890390e",
+                            Id = "b266c332-9f69-433a-a233-b05c6daa1870",
+                            ConcurrencyStamp = "7d03451a-dc36-4bf1-bf6a-b8b06784b932",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -372,7 +374,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<decimal?>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("StarRating")
+                    b.Property<int>("StarRating")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -404,7 +406,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");

@@ -14,7 +14,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         public int ReviewId { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public int StarRating { get; set; }
+        public int? StarRating { get; set; }
         public virtual Book Books { get; set; }
         public virtual Member Members{ get; set; }
         public DateTime? ReviewDate { get; set; }
