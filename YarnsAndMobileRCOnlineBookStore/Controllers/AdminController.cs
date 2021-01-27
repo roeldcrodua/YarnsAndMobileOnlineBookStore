@@ -14,6 +14,7 @@ using YarnsAndMobileRCOnlineBookStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using YarnsAndMobileRCOnlineBookStore.Models.ImportModels;
 using YarnsAndMobileRCOnlineBookStore.Views.Admin;
+using YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -30,14 +31,33 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             _userManager = userManager;
             _env = environment;
         }
-        public IActionResult Index()
+
+
+        [BindProperty]
+        public Member Users { get; set; }
+
+        [Route("MemberIndex")]
+        public IActionResult MemberIndex()
         {
-            ViewData["message"] = TempData["message"];
-            return View();
+            List<Member> users = new List<Member>();
+
+            foreach (var member in _dbContext.Members)
+            {
+                Users = new Member
+                {
+                    AccountNumber = member.AccountNumber,
+                    Email = member.Email,
+                    FirstName = member.FirstName,
+                    LastName = member.LastName
+                };
+                users.Add(Users);
+            }
+            
+            return View(users.ToList());
         }
 
         [Route("Admin")]
-        public void ImportData()
+        public IActionResult ImportData()
         {
             var userAdmin = _userManager.GetUserId(User);
             ApplicationDbInitializer.SeedUsers(_userManager, userAdmin);
@@ -47,6 +67,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var memberKeyMap = LoadMembers();
             LoadSalesAndReviews(bookKeyMap, memberKeyMap);
 
+            return RedirectToAction(nameof(Index));
         }
 
         private Dictionary<int, string> LoadMembers()
@@ -57,6 +78,15 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var keyValue = new Dictionary<int, string>();
             foreach (var importMember in importMembers)
             {
+                var member = new Member
+                {
+                    MemberId = importMember.Id,
+                    AccountNumber = importMember.AccountNumber,
+                    FirstName = importMember.FirstName,
+                    LastName = importMember.LastName,
+                    Email = importMember.Email,
+                };
+
                 var address = new Address
                 {
                     Line1 = importMember.Line1,
@@ -64,7 +94,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     Street = importMember.Street,
                     City = importMember.City,
                     State = importMember.State,
-                    Zip = importMember.Zip
+                    Zip = importMember.Zip,
+                    Members = member
+                    
                 };
 
                 var phone = new Phone
@@ -73,18 +105,12 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     Phone2 = importMember.Phone2,
                     Phone3 = importMember.Phone3,
                     Phone4 = importMember.Phone4,
+                    Members = member
                 };
 
-                var member = new Member
-                {
-                    AccountNumber = importMember.AccountNumber,
-                    FirstName = importMember.FirstName,
-                    LastName = importMember.LastName,
-                    Email = importMember.Email
-                };
 
-                member.PhoneNumbers = phone;
-                member.Addresses = address;
+                _dbContext.Phones.Add(phone);
+                _dbContext.Addresses.Add(address);
                 _dbContext.Members.Add(member);
                 keyValue.Add(importMember.Id, member.Id);
 
