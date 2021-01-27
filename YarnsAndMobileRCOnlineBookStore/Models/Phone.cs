@@ -14,5 +14,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         public string Phone2 { get; set; }
         public string Phone3 { get; set; }
         public string Phone4 { get; set; }
+
+        public virtual Member Members { get; set; }
     }
 }

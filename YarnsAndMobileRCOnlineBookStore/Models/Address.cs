@@ -16,5 +16,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         public string State { get; set; }
         public string Zip { get; set; }
 
+        public virtual Member Members { get; set; }
     }
 }

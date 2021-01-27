@@ -29,8 +29,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Models.Data
         [Display(Name = "Email Address")]
         public override string Email { get; set; }
 
-        public virtual Address? Addresses { get; set; }
-        public virtual Phone PhoneNumbers { get; set; }
+        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual ICollection<Phone> PhoneNumbers { get; set; }
         public virtual ICollection<Sale> Sales { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210124182825_ChnagePhoneAddressTOICollection")]
+    partial class ChnagePhoneAddressTOICollection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "91c5c09a-7d15-43df-a6f4-e0ac53941bc8",
-                            ConcurrencyStamp = "bd913e36-7681-41ce-a3b1-fcf3f32159b8",
+                            Id = "ffdca76f-2770-4b46-a338-81f67ab417ab",
+                            ConcurrencyStamp = "7e2e1a2c-1390-45d6-973a-e05e65942104",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -179,7 +181,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Line2")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MembersId")
+                    b.Property<string>("MemberId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("State")
@@ -193,7 +195,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("MembersId");
+                    b.HasIndex("MemberId");
 
                     b.ToTable("Addresses");
                 });
@@ -394,7 +396,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("MembersId")
+                    b.Property<string>("MemberId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Phone1")
@@ -411,7 +413,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.HasKey("PhoneId");
 
-                    b.HasIndex("MembersId");
+                    b.HasIndex("MemberId");
 
                     b.ToTable("Phones");
                 });
@@ -540,11 +542,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Address", b =>
                 {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
+                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", null)
                         .WithMany("Addresses")
-                        .HasForeignKey("MembersId");
-
-                    b.Navigation("Members");
+                        .HasForeignKey("MemberId");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Book", b =>
@@ -564,11 +564,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Phone", b =>
                 {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
+                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", null)
                         .WithMany("PhoneNumbers")
-                        .HasForeignKey("MembersId");
-
-                    b.Navigation("Members");
+                        .HasForeignKey("MemberId");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Review", b =>

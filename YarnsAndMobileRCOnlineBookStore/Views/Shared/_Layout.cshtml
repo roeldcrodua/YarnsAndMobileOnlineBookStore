@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using YarnsAndMobileRCOnlineBookStore.Models.Data
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,7 +31,20 @@
                             <a class="menu-title" asp-area="" asp-controller="Books" asp-action="">Books</a>
                         </li>
                         <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Admin" asp-action="">Members</a>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                if (@User.IsInRole("Admin") == true)
+                                {
+                                    <a class="menu-title" asp-area=""  asp-controller="MemberIndex" asp-action="">Members</a>
+                                }
+                                else
+                                {
+                                    <a class="menu-title" asp-area="Identity" asp-page="Index" asp-controller="" asp-action="">Profile</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-menu-title">
+                            <a class="menu-title" asp-area="" asp-controller="Admin" asp-action="">Admin</a>
                         </li>
                         <li class="nav-menu-title">
                             <a class="menu-title" asp-area="" asp-controller="Reviews" asp-action="">Review Index</a>

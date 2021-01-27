@@ -3,21 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210123203138_ModifySalesModels")]
+    partial class ModifySalesModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -48,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "91c5c09a-7d15-43df-a6f4-e0ac53941bc8",
-                            ConcurrencyStamp = "bd913e36-7681-41ce-a3b1-fcf3f32159b8",
+                            Id = "37d86d92-c102-4e2e-a5f6-4c5fb8b0bbec",
+                            ConcurrencyStamp = "142217b8-079f-454f-9e96-795a346e403b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -179,9 +181,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Line2")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MembersId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
@@ -192,8 +191,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AddressId");
-
-                    b.HasIndex("MembersId");
 
                     b.ToTable("Addresses");
                 });
@@ -252,6 +249,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("AddressesAddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -298,6 +298,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PhoneNumbersPhoneId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -310,6 +313,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressesAddressId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -318,73 +323,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PhoneNumbersPhoneId");
+
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.ImportModels.MemberImport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("AccountNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Line1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Line2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneType1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneType2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneType3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneType4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Zip")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MemberImport");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Phone", b =>
@@ -393,9 +334,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
-
-                    b.Property<string>("MembersId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Phone1")
                         .HasColumnType("nvarchar(max)");
@@ -410,8 +348,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PhoneId");
-
-                    b.HasIndex("MembersId");
 
                     b.ToTable("Phones");
                 });
@@ -538,15 +474,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Address", b =>
-                {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
-                        .WithMany("Addresses")
-                        .HasForeignKey("MembersId");
-
-                    b.Navigation("Members");
-                });
-
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Book", b =>
                 {
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Book", "Books")
@@ -562,13 +489,19 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Phone", b =>
+            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", b =>
                 {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
-                        .WithMany("PhoneNumbers")
-                        .HasForeignKey("MembersId");
+                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Address", "Addresses")
+                        .WithMany()
+                        .HasForeignKey("AddressesAddressId");
 
-                    b.Navigation("Members");
+                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Phone", "PhoneNumbers")
+                        .WithMany()
+                        .HasForeignKey("PhoneNumbersPhoneId");
+
+                    b.Navigation("Addresses");
+
+                    b.Navigation("PhoneNumbers");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Review", b =>
@@ -603,10 +536,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", b =>
                 {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("PhoneNumbers");
-
                     b.Navigation("Reviews");
 
                     b.Navigation("Sales");

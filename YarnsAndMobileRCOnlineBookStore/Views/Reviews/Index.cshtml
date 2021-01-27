@@ -24,6 +24,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.ReviewDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Members.Email)
             <th></th>
         </tr>
     </thead>
@@ -41,6 +43,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReviewDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Members.Email)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a> |

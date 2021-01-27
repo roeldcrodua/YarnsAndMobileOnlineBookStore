@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using YarnsAndMobileRCOnlineBookStore.Models;
 using YarnsAndMobileRCOnlineBookStore.Models.Data;
+using YarnsAndMobileRCOnlineBookStore.Models.ImportModels;
 
 namespace YarnsAndMobileRCOnlineBookStore.Data
 {
@@ -36,5 +37,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Data
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
 
         }
+
+
+        public DbSet<YarnsAndMobileRCOnlineBookStore.Models.ImportModels.MemberImport> MemberImport { get; set; }
     }
 }
