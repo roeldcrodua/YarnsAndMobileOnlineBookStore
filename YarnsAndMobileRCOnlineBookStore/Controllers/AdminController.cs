@@ -146,6 +146,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     FirstName = importMember.FirstName,
                     LastName = importMember.LastName,
                     Email = importMember.Email,
+                    UserName = importMember.Email
                 };
 
                 var address = new Address
