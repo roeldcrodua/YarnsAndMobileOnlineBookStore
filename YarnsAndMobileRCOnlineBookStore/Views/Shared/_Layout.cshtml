@@ -35,16 +35,16 @@
                             {
                                 if (@User.IsInRole("Admin") == true)
                                 {
-                                    <a class="menu-title" asp-area=""  asp-controller="MemberIndex" asp-action="">Members</a>
+                                    <a class="menu-title" asp-area=""  asp-controller="Admin" asp-action="MemberIndex">Members</a>
                                 }
                                 else
                                 {
-                                    <a class="menu-title" asp-area="Identity" asp-page="Index" asp-controller="" asp-action="">Profile</a>
+                                    <a class="menu-title" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
                                 }
                             }
                         </li>
                         <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Admin" asp-action="">Admin</a>
+                            <a class="menu-title" asp-area=""  asp-controller="Admin" asp-action="UploadFile" >Admin</a>
                         </li>
                         <li class="nav-menu-title">
                             <a class="menu-title" asp-area="" asp-controller="Reviews" asp-action="">Review Index</a>

@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using YarnsAndMobileRCOnlineBookStore.Models.ImportModels;
 using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 using YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage;
+using System.Text;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -25,6 +26,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         private readonly UserManager<Member> _userManager;
         private readonly IWebHostEnvironment _env;
 
+        public enum UploadType { Book, Member, SaleReview };
         public AdminController(ApplicationDbContext dbContext, UserManager<Member> userManager, IWebHostEnvironment environment)
         {
             _dbContext = dbContext;
@@ -32,6 +34,12 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             _env = environment;
         }
 
+        //[Route("/Admin/UploadFile")]
+        public IActionResult Index()
+        {
+            ViewData["message"] = TempData["message"];
+            return View();
+        }
 
         [BindProperty]
         public Member Users { get; set; }
@@ -56,23 +64,76 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             return View(users.ToList());
         }
 
-        [Route("Admin")]
+
         public IActionResult ImportData()
         {
             var userAdmin = _userManager.GetUserId(User);
             ApplicationDbInitializer.SeedUsers(_userManager, userAdmin);
 
 
-            var bookKeyMap = LoadBooks();
-            var memberKeyMap = LoadMembers();
-            LoadSalesAndReviews(bookKeyMap, memberKeyMap);
+            var message = LoadImportData();
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                TempData["message"] = message;
+                return RedirectToAction(nameof(Index));
+            }
 
+            TempData["message"] = "Data imported";
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult UploadFile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadFile(IFormFile file, string fileDataType)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    TempData["message"] = "File not selected";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (Path.GetExtension(file.FileName).ToLower() != ".json")
+                {
+                    TempData["message"] = "Only json files are supported at this time";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var uploadType = Enum.Parse<UploadType>(fileDataType);
+                var path = GetFileName(uploadType);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch
+            {
+                TempData["message"] = "An unexpected error occurred";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["message"] = "File Uploaded";
+            return RedirectToAction(nameof(Index));
+        }
+
+        private string GetFileName(UploadType uploadType)
+        {
+            var currentDir = _env.ContentRootPath;
+            Directory.CreateDirectory(Path.Combine(currentDir, "FileUploads"));
+            var fileDir = Path.Combine(currentDir, "FileUploads");
+            return Path.Combine(fileDir.ToString(), $"{uploadType}.json");
+        }
+
+
         private Dictionary<int, string> LoadMembers()
         {
-            var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_Member.json");
+            var jsonFile = System.IO.File.ReadAllText(GetFileName(UploadType.Member));
             var importMembers = JsonConvert.DeserializeObject<List<MemberImport>>(jsonFile);
 
             var keyValue = new Dictionary<int, string>();
@@ -119,9 +180,36 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             return keyValue;
         }
 
+        private string LoadImportData()
+        {
+            var sb = new StringBuilder();
+            var bookFile = GetFileName(UploadType.Book);
+            var memberFile = GetFileName(UploadType.Member);
+            var saleReviewFile = GetFileName(UploadType.SaleReview);
+            if (!System.IO.File.Exists(bookFile))
+                sb.AppendLine("You need to upload a file containing Book data");
+            if (!System.IO.File.Exists(memberFile))
+                sb.AppendLine("You need to upload a file containing Member data");
+            if (!System.IO.File.Exists(saleReviewFile))
+                sb.AppendLine("You need to upload a file containing Sale and Review data");
+            if (sb.Length > 0)
+                return sb.ToString();
+
+            try
+            {
+                var bookKeyMap = LoadBooks();
+                var memberKeyMap = LoadMembers();
+                LoadSalesAndReviews(bookKeyMap, memberKeyMap);
+            }
+            catch
+            {
+                return "Import failed. Please be sure to upload the correct files.";
+            }
+            return null;
+        }
         private Dictionary<int, int> LoadBooks()
         {
-            var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_Book.json");
+            var jsonFile = System.IO.File.ReadAllText(GetFileName(UploadType.Book));
             var importBooks = JsonConvert.DeserializeObject<List<BookImport>>(jsonFile);
 
             var keyValue = new Dictionary<int, int>();
@@ -147,7 +235,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
 
         private void LoadSalesAndReviews(Dictionary<int, int> bookKeyMap, Dictionary<int, string> memberKeyMap)
         {
-            var jsonFile = System.IO.File.ReadAllText(@"C:\Users\Roel\Documents\MCSD\PROJECT\YarnsAndMobileRCOnlineBookStore\Yarns_SaleReview.json");
+            var jsonFile = System.IO.File.ReadAllText(GetFileName(UploadType.SaleReview));
             var importSaleReviews = JsonConvert.DeserializeObject<List<SaleReviewImport>>(jsonFile);
 
             foreach (var importSaleReview in importSaleReviews)
@@ -182,40 +270,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 }
                 _dbContext.SaveChanges();
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file, string fileDataType)
-        {
-            try
-            {
-                if (file == null || file.Length == 0)
-                {
-                    TempData["message"] = "File not selected";
-                    return RedirectToAction(nameof(Index));
-                }
-
-                if (Path.GetExtension(file.Name).ToLower() != ".json")
-                {
-                    TempData["message"] = "Only json files are supported at this time";
-                    return RedirectToAction(nameof(Index));
-                }
-
-                var path = Path.GetFullPath(_env.ApplicationName);
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-            }
-            catch
-            {
-                TempData["message"] = "An unexpected error occurred";
-                return RedirectToAction(nameof(Index));
-            }
-
-            TempData["message"] = "File Uploaded";
-            return RedirectToAction(nameof(Index));
         }
 
     }
