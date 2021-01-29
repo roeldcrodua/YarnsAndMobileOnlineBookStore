@@ -46,6 +46,28 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            public readonly static string[] State = { "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY" };
+
+            public readonly static string[] Direction = { "NO", "SO", "WE", "EA", "NE", "NW", "SE", "SW" };
+
+            private string accountNumber;
+            [Display(Name = "Account Number")]
+            public string AccountNumber 
+            { 
+                get {
+                    Random random = new Random();
+                    var state = random.Next(0, State.Length);
+                    var direction = random.Next(0, Direction.Length);
+                    var lastDigits = random.Next(10000000, 99999999);
+
+                    accountNumber = $"{State[state]}{Direction[direction]}{lastDigits}"; 
+                    return accountNumber; 
+                }
+                set {
+                    accountNumber = value;
+                }
+            }
+
             [Required]
             [Display(Name = "User Name")]
             public string UserName { get; set; }
@@ -75,6 +97,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -87,7 +110,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Member { UserName = Input.Email, Email = Input.Email };
+                var user = new Member { AccountNumber = Input.AccountNumber, UserName = Input.UserName, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
