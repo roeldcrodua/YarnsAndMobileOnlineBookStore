@@ -9,18 +9,16 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table col-8">
     <thead>
-        <tr>
+        <tr class="col">
             <th>
                 @Html.DisplayNameFor(model => model.ISBN)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
+ 
             <th>
                 @Html.DisplayNameFor(model => model.AuthorFirstName)
             </th>
@@ -45,9 +43,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
-            </td>
+ 
             <td>
                 @Html.DisplayFor(modelItem => item.AuthorFirstName)
             </td>

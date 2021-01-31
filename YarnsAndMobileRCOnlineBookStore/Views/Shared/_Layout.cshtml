@@ -10,50 +10,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - YarnsAndMobileRCOnlineBookStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Yarns And Mobile Online BookStore</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                About Us
+                                <span class="sr-only">(current)</span>
+                            </a>
 
-                    <ul class="nav-item-menulist">
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Home" asp-action="Index">About Us</a>
                         </li>
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Books" asp-action="">Books</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Books</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="">Book Index</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="">Search</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="">Buy Books</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="">Book Reviews</a>
+                            </div>
                         </li>
-                        <li class="nav-menu-title">
-                            @if (SignInManager.IsSignedIn(User))
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Member</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="MemberIndex">Member Index</a>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">My Profile</a>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Purchased Book</a>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Reviewed Book</a>
+                                <div class="dropdown-divider"></div>
+                            </div>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            if (@User.IsInRole("Admin") == true)
                             {
-                                if (@User.IsInRole("Admin") == true)
-                                {
-                                    <a class="menu-title" asp-area=""  asp-controller="Admin" asp-action="MemberIndex">Members</a>
-                                }
-                                else
-                                {
-                                    <a class="menu-title" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
-                                }
+                                <li class="nav-item dropdown ">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Admin</a>
+                                    <div class="dropdown-menu ">
+                                        <ul class="list-unstyled">
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Data</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="UploadFile">Import Data</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item ">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Members</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Add New Member (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Edit Member (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Delete Member (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Books</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Create">Add New Book (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Edit">Edit Book (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Books" asp-action="Delete">Delete Book (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Sales</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Index">List of Sales (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Create">Add New Book (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Edit">Edit Book (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Delete">Delete Book (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Reviews</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Index">List of Reviews (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Create">Add New Review (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Edit">Edit Review (For Admin Only)</a>
+                                                        <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Delete">Delete Review (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </li>
                             }
-                        </li>
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area=""  asp-controller="Admin" asp-action="UploadFile" >Admin</a>
-                        </li>
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Reviews" asp-action="">Review Index</a>
-                        </li>
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Sales" asp-action="">Sale</a>
-                        </li>
-                        <li class="nav-menu-title">
-                            <a class="menu-title" asp-area="" asp-controller="Contact" asp-action="">Stable Genius</a>
+                            else
+                            {
+                                <li class="nav-item dropdown ">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Admin</a>
+                                    <div class="dropdown-menu ">
+                                        <ul class="list-unstyled">
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Data</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Admin" asp-action="UploadFile">Import Data</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item ">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Members</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Register">Add New Member (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Manage/Index">Edit Member (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Manage/Index">Delete Member (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Books</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Books" asp-action="Create">Add New Book (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Books" asp-action="Edit">Edit Book (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Books" asp-action="Delete">Delete Book (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Sales</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Sales" asp-action="Index">List of Sales (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Sales" asp-action="Create">Add New Book (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Sales" asp-action="Edit">Edit Book (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Sales" asp-action="Delete">Delete Book (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Reviews</a>
+                                                <ul class="list-unstyled">
+                                                    <li class="dropdown-item">
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Reviews" asp-action="Index">List of Reviews (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Reviews" asp-action="Create">Add New Review (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Reviews" asp-action="Edit">Edit Review (For Admin Only)</a>
+                                                        <a class="dropdown-item disabled" asp-area="" asp-controller="Reviews" asp-action="Delete">Delete Review (For Admin Only)</a>
+                                                        <div class="dropdown-divider"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                        }
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contact</a>
+                            <div class="dropdown-menu">
+                                <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="">Stable Genius</a>
+                            </div>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
