@@ -15,7 +15,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Data
             {
                 var user = new Member
                 {
-                    UserName = "admin@yarnsandmobile.com",
+                    UserName = "admin",
                     Email = "admin@yarnsandmobile.com",
                     AccountNumber = "ADMN00000001",
                     FirstName = "User",
