@@ -28,6 +28,12 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             _dbContext = dbContext;
         }
 
+        [TempData]
+        public string StatusMessage { get; set; }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+        public Member user;
         public class InputModel
         {
             [Display(Name = "Account Number")]
@@ -42,26 +48,11 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
         }
-        [TempData]
-        public string StatusMessage { get; set; }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
-        public Member user;
 
-        private async Task LoadAsync(Member member)
+        private void LoadAsync(Member member)
         {
-            if (_signInManager.IsSignedIn(User))
-            {
-                if (User.IsInRole("Admin") == true)
-                {
-                    user = _dbContext.Members.Find(member.Id);
-                }
-                else
-                {
-                    user = await _userManager.GetUserAsync(User);
-                }
-            }
+            user = _dbContext.Members.Find(member.Id);
 
             Input = new InputModel
             {
@@ -82,6 +73,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
                 }
                 else
                 {
+
                     user = await _userManager.GetUserAsync(User);
                 }
             }
@@ -90,22 +82,33 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with UserId '{_userManager.GetUserId(User)}'.");
             }
 
-            await LoadAsync(user);
+            LoadAsync(user);
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(Member member)
         {
 
-            user = await _userManager.GetUserAsync(User);
+            if (_signInManager.IsSignedIn(User))
+            {
+                if (User.IsInRole("Admin") == true)
+                {
+                    user = _dbContext.Members.Find(member.Id);
+                }
+                else
+                {
+
+                    user = await _userManager.GetUserAsync(User);
+                }
+            }
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                await LoadAsync(user);
+                LoadAsync(user);
                 return Page();
             }
 
@@ -119,6 +122,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             else if (Input.UserName != member.UserName)
             {
                 member.UserName = Input.UserName;
+                _dbContext.Update(member);
             }
 
             if (Input.FirstName == "")
@@ -129,6 +133,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             else if (Input.FirstName != member.FirstName)
             {
                 member.FirstName = Input.FirstName;
+                _dbContext.Update(member);
             }
 
             if (Input.LastName == "")
@@ -139,6 +144,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             else if (Input.LastName != member.LastName)
             {
                 member.LastName = Input.LastName;
+                _dbContext.Update(member);
             }
 
             await _dbContext.SaveChangesAsync();
