@@ -10,8 +10,8 @@ using YarnsAndMobileRCOnlineBookStore.Data;
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210124185727_AddVirtualMembers")]
-    partial class AddVirtualMembers
+    [Migration("20210203213153_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "91c5c09a-7d15-43df-a6f4-e0ac53941bc8",
-                            ConcurrencyStamp = "bd913e36-7681-41ce-a3b1-fcf3f32159b8",
+                            Id = "bd01ed91-d82a-4220-ab8d-9318364a4868",
+                            ConcurrencyStamp = "07a6de5f-acfb-4759-9689-a4de6c4270aa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

@@ -1,6 +1,7 @@
 ﻿TODO Lists:
 1) Fix the Registration process to add the Phone Number and Address upon registration phase.
 2) Fix the Profile Index as a member AND as an Admin.
+3) Add the phonenumber profile.
 3) Add random process in creation of the account number. DONE
 4) To add BUY method for the sale Model
 5) Add pages on the result.

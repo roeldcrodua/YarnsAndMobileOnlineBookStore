@@ -11,6 +11,7 @@
     <title>@ViewData["Title"] - YarnsAndMobileRCOnlineBookStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/bootstrap.css" />
+  
 </head>
 <body>
     <header>
@@ -24,7 +25,7 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                About Us
+                                Welcome
                                 <span class="sr-only">(current)</span>
                             </a>
 
@@ -136,7 +137,7 @@
                                                 <ul class="list-unstyled">
                                                     <li class="dropdown-item">
                                                         <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Register">Add New Member (For Admin Only)</a>
-                                                        <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Manage/Index">Edit Member (For Admin Only)</a>
+                                                        <a class="dropdown-item " asp-area="Identity" asp-page="/Account/Manage/Index">Edit Member (For Admin Only)</a>
                                                         <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Manage/Index">Delete Member (For Admin Only)</a>
                                                         <div class="dropdown-divider"></div>
                                                     </li>
@@ -184,9 +185,10 @@
                             }
                         }
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contact</a>
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stable Genius</a>
                             <div class="dropdown-menu">
-                                <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="">Stable Genius</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="About" asp-action="">About</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Contact" asp-action="">Contact</a>
                             </div>
                         </li>
                     </ul>

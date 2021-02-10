@@ -11,5 +11,11 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         {
             return View();
         }
+
+        [Route("About")]
+        public IActionResult About()
+        {
+            return View();
+        }
     }
 }
