@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using PagedList;
 using Microsoft.EntityFrameworkCore;
 using YarnsAndMobileRCOnlineBookStore.Data;
 using YarnsAndMobileRCOnlineBookStore.Models;
 using YarnsAndMobileRCOnlineBookStore.Models.Data;
+using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -16,7 +17,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Member> _userManager;
-
+        
         public BooksController(ApplicationDbContext context, UserManager<Member> userManager)
         {
             _context = context;
@@ -25,9 +26,53 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
 
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            return View(await _context.Books.ToListAsync());
+            ViewBag.CurentSort = sortOrder;
+            ViewBag.TitleSort = String.IsNullOrEmpty(sortOrder) ? "Title" : "";
+            ViewBag.FirstNameSort = sortOrder == "AuthorFirstName" ? "AuthorLastName" : "AuthorFirstName";
+            ViewBag.LastNameSort = sortOrder == "AuthorLastName" ? "AuthorFirstName" : "AuthorLastName";
+            ViewBag.CopyrightYearSort = sortOrder == "CopyrightYear" ? "Title" : "CopyrightYear";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var books = from book in _context.Books select book;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(book => book.Title.Contains(searchString)
+                                       || book.AuthorFirstName.Contains(searchString)
+                                       || book.AuthorLastName.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "CopyrightYear":
+                    books = books.OrderByDescending(s => s.CopyrightYear);
+                    break;
+                case "AuthorFirstName":
+                    books = books.OrderBy(s => s.AuthorFirstName);
+                    break;
+                case "AuthorLastName":
+                    books = books.OrderByDescending(s => s.AuthorLastName);
+                    break;
+                case "SalePrice":
+                    books = books.OrderByDescending(s => s.SalePrice);
+                    break;
+                default:
+                    books = books.OrderBy(s => s.Title);
+                    break;
+            }
+            int pageSize = 10;
+            return View(await PaginatedList<Book>.CreateAsync(books.AsNoTracking(), pageNumber ?? 1, pageSize)); 
         }
 
         // GET: Books/Details/5

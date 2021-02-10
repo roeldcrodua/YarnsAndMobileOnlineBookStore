@@ -1,7 +1,10 @@
-﻿@model IEnumerable<YarnsAndMobileRCOnlineBookStore.Models.Book>
+﻿@model YarnsAndMobileRCOnlineBookStore.Views.Admin.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Book>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Book Index";
 }
 
 <h1>Index</h1>
@@ -9,59 +12,165 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table col-8">
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Title or Name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<table class="table  table-hover">
     <thead>
-        <tr class="col">
-            <th>
-                @Html.DisplayNameFor(model => model.ISBN)
+        <tr class="table-info">
+            <th scope="col">
+                ISBN
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
+            <th scope="col">
+                @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSort, currentFilter = ViewBag.CurrentFilter })
             </th>
- 
-            <th>
-                @Html.DisplayNameFor(model => model.AuthorFirstName)
+            <th scope="col">
+                @Html.ActionLink("AuthorFirstName", "Index", new { sortOrder = ViewBag.FirstNameSort, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuthorLastName)
+            <th scope="col">
+                @Html.ActionLink("AuthorLastName", "Index", new { sortOrder = ViewBag.LastNameSort, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CopyrightYear)
+            <th scope="col">
+                @Html.ActionLink("CopyrightYear", "Index", new { sortOrder = ViewBag.CopyrightYearSort, currentFilter = ViewBag.CurrentFilter })
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SalePrice)
+            <th scope="col">
+                Sale Price
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
- 
-            <td>
-                @Html.DisplayFor(modelItem => item.AuthorFirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuthorLastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CopyrightYear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalePrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr class="table-light">
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorFirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorLastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CopyrightYear)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalePrice)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<br />
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="1"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                First
+            </a>
+        </li>
+        <li class="page-item @prevDisabled">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Previous
+            </a>
+        </li>
+        <li class="page-item active">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">@(Model.PageIndex)</a>
+        </li>
+        @{
+            int pIndex = Model.PageIndex;
+            int pageNum;
+        }
+        @if (Model.TotalPages != 0)
+        {
+            @for (int i = 1; i <= 10; i++)
+            {
+                pageNum = pIndex + i;
+                <li class="page-item ">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(pageNum)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="page-link ">@(pageNum)</a>
+                </li>
+            }
+        }
+        else
+        {
+            @for (int i = 1; i <= 10; i++)
+            {
+                <li class="page-item disabled">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(i)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="page-link ">@(i)</a>
+                </li>
+            }
+        }
+        <li class="page-item @nextDisabled">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Next
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.TotalPages)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Last
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div id="container" style="margin-left: 20px">
+    <p></p>
+    <p></p>
+    <div class="pagination" style="margin-left: 400px">
+        Page @(Model.PageIndex < Model.TotalPages ? Model.PageIndex : 1) of @Model.TotalPages
+
+    </div>
+</div>
+
+
+
