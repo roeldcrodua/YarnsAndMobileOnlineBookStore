@@ -4,4 +4,7 @@
 3) Add the phonenumber profile.
 3) Add random process in creation of the account number. DONE
 4) To add BUY method for the sale Model
-5) Add pages on the result.
+5) Add pages on the Book result.						DONE
+6) Add pages on the Member result.						DONE
+7) Add pages on the Review result						DONE
+8) Add pages on the Sale result							DONE
