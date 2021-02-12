@@ -53,11 +53,6 @@ namespace YarnsAndMobileRCOnlineBookStore
             }
             dbContext.Database.EnsureCreated();
 
-            //using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-            //}
-
             ApplicationDbInitializer.SeedUsers(userManager);
 
             app.UseHttpsRedirection();
