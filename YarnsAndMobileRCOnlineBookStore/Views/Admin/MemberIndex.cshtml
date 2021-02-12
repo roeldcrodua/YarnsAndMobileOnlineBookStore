@@ -1,27 +1,40 @@
-﻿@model IEnumerable<YarnsAndMobileRCOnlineBookStore.Models.Data.Member>
+﻿@model YarnsAndMobileRCOnlineBookStore.Controllers.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Data.Member>
+@using PagedList.Mvc;
 
 @{
     ViewData["Title"] = "Members List";
 }
 <h4>@ViewData["Title"]</h4>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="MemberIndex" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <em>Find Member: </em>
+            <input type="text" class="w-50" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" />
+            <a asp-action="MemberIndex">Back to Full List</a>
+        </p>
+    </div>
+</form>
 
 <table class="table  table-hover">
     <thead>
         <tr class="table-info">
             <th scope="col">
-                @Html.DisplayNameFor(model => model.AccountNumber)
+                @Html.ActionLink("Account Number", "MemberIndex", new { sortOrder = ViewBag.AccountSort, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.ActionLink("First Name", "MemberIndex", new { sortOrder = ViewBag.FirstNameSort, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.ActionLink("Last Name", "MemberIndex", new { sortOrder = ViewBag.LastNameSort, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.ActionLink("Email", "MemberIndex", new { sortOrder = ViewBag.EmailSort, currentFilter = ViewBag.CurrentFilter })
             </th>
             <th></th>
         </tr>
@@ -56,3 +69,84 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<br />
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-action="MemberIndex"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="1"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                First
+            </a>
+        </li>
+        <li class="page-item @prevDisabled">
+            <a asp-action="MemberIndex"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Previous
+            </a>
+        </li>
+        @if (Model.TotalPages > 0)
+        {
+            int pageNum;
+            int pageLimit = 10;
+            if (Model.TotalPages > pageLimit)
+                pageLimit = 10;
+            else
+                pageLimit = Model.TotalPages;
+
+            @for (int i = 0; i < pageLimit; i++)
+            {
+                pageNum = Model.PageIndex + i;
+                var currentIndex = Model.PageIndex == pageNum ? "active" : "";
+                if (pageNum <= Model.TotalPages)
+                {
+                    <li class="page-item @(currentIndex)">
+                        <a asp-action="MemberIndex"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-pageNumber="@(pageNum)"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           class="page-link">@(pageNum)</a>
+                    </li>
+                }
+            }
+        }
+        <li class="page-item @nextDisabled">
+            <a asp-action="MemberIndex"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Next
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-action="MemberIndex"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.TotalPages)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link ">
+                Last
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div id="container" style="margin-left: 20px">
+    <p></p>
+    <p></p>
+    <div class="pagination" style="margin-left: 400px">
+        Page @(Model.PageIndex < Model.TotalPages ? Model.PageIndex : 1) of @Model.TotalPages
+
+    </div>
+</div>

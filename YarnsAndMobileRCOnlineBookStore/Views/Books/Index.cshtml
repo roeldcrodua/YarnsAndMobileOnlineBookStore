@@ -1,7 +1,5 @@
-﻿@model YarnsAndMobileRCOnlineBookStore.Views.Admin.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Book>
+﻿@model YarnsAndMobileRCOnlineBookStore.Controllers.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Book>
 @using PagedList.Mvc;
-
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewData["Title"] = "Book Index";
@@ -16,7 +14,8 @@
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by Title or Name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <em>Find by Title or Nme: </em>
+            <input type="text" class="w-50" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" />
             <a asp-action="Index">Back to Full List</a>
         </p>
@@ -49,35 +48,38 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr class="table-light">
-                <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
+        <tr class="table-light">
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuthorFirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuthorLastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CopyrightYear)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SalePrice)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorFirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorLastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CopyrightYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalePrice)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 <br />
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
@@ -111,35 +113,29 @@
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
                class="page-link ">@(Model.PageIndex)</a>
         </li>
-        @{
-            int pIndex = Model.PageIndex;
+        @if (Model.TotalPages > 0)
+        {
             int pageNum;
-        }
-        @if (Model.TotalPages != 0)
-        {
-            @for (int i = 1; i <= 10; i++)
+            int pageLimit = 10;
+            if (Model.TotalPages > pageLimit)
+                pageLimit = 10;
+            else
+                pageLimit = Model.TotalPages;
+
+            @for (int i = 0; i < pageLimit; i++)
             {
-                pageNum = pIndex + i;
-                <li class="page-item ">
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-pageNumber="@(pageNum)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="page-link ">@(pageNum)</a>
-                </li>
-            }
-        }
-        else
-        {
-            @for (int i = 1; i <= 10; i++)
-            {
-                <li class="page-item disabled">
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-pageNumber="@(i)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="page-link ">@(i)</a>
-                </li>
+                pageNum = Model.PageIndex + i;
+                var currentIndex = Model.PageIndex == pageNum ? "active" : "";
+                if (pageNum <= Model.TotalPages)
+                {
+                    <li class="page-item @(currentIndex)">
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-pageNumber="@(pageNum)"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           class="page-link">@(pageNum)</a>
+                    </li>
+                }
             }
         }
         <li class="page-item @nextDisabled">
