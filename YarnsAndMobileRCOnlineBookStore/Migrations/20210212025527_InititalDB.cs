@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InititalDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,6 +48,25 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Books",
+                columns: table => new
+                {
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CopyrightYear = table.Column<int>(type: "int", nullable: true),
+                    SalePrice = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Books", x => x.BookId);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,39 +231,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Books",
-                columns: table => new
-                {
-                    BookId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AuthorFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AuthorLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CopyrightYear = table.Column<int>(type: "int", nullable: true),
-                    SalePrice = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BooksBookId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Books", x => x.BookId);
-                    table.ForeignKey(
-                        name: "FK_Books_AspNetUsers_MemberId",
-                        column: x => x.MemberId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Books_Books_BooksBookId",
-                        column: x => x.BooksBookId,
-                        principalTable: "Books",
-                        principalColumn: "BookId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Phones",
                 columns: table => new
                 {
@@ -276,11 +262,11 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StarRating = table.Column<int>(type: "int", nullable: true),
-                    BooksBookId = table.Column<int>(type: "int", nullable: true),
-                    MembersId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SalePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    SaleDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    SaleDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    BooksBookId = table.Column<int>(type: "int", nullable: true),
+                    MembersId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -307,7 +293,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MembersId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     BooksBookId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -331,7 +316,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "bd01ed91-d82a-4220-ab8d-9318364a4868", "07a6de5f-acfb-4759-9689-a4de6c4270aa", "Admin", "ADMIN" });
+                values: new object[] { "c0099cbc-b150-4687-b542-6909de334bae", "1bd9b1b6-1f96-46cc-90dd-c7cbeb2cc751", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_MembersId",
@@ -376,16 +361,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_BooksBookId",
-                table: "Books",
-                column: "BooksBookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_MemberId",
-                table: "Books",
-                column: "MemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Phones_MembersId",
@@ -449,10 +424,10 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Books");
         }
     }
 }

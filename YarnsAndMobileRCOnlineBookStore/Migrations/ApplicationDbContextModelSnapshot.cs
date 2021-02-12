@@ -15,9 +15,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -48,8 +48,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bd01ed91-d82a-4220-ab8d-9318364a4868",
-                            ConcurrencyStamp = "07a6de5f-acfb-4759-9689-a4de6c4270aa",
+                            Id = "c0099cbc-b150-4687-b542-6909de334bae",
+                            ConcurrencyStamp = "1bd9b1b6-1f96-46cc-90dd-c7cbeb2cc751",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -60,7 +60,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -84,7 +84,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -168,7 +168,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
@@ -203,16 +203,13 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AuthorFirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AuthorLastName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BooksBookId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("CopyrightYear")
                         .HasColumnType("int");
@@ -223,9 +220,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MemberId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(5,2)");
 
@@ -233,10 +227,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookId");
-
-                    b.HasIndex("BooksBookId");
-
-                    b.HasIndex("MemberId");
 
                     b.ToTable("Books");
                 });
@@ -326,7 +316,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
@@ -392,7 +382,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("PhoneId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("MembersId")
                         .HasColumnType("nvarchar(450)");
@@ -421,7 +411,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BooksBookId")
                         .HasColumnType("int");
@@ -461,7 +451,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BooksBookId")
                         .HasColumnType("int");
@@ -474,9 +464,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("OrderId");
 
@@ -547,21 +534,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Book", b =>
-                {
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Book", "Books")
-                        .WithMany()
-                        .HasForeignKey("BooksBookId");
-
-                    b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId");
-
-                    b.Navigation("Books");
-
-                    b.Navigation("Member");
-                });
-
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Phone", b =>
                 {
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
@@ -574,7 +546,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Review", b =>
                 {
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Book", "Books")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("BooksBookId");
 
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
@@ -589,7 +561,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Sale", b =>
                 {
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Book", "Books")
-                        .WithMany()
+                        .WithMany("Sales")
                         .HasForeignKey("BooksBookId");
 
                     b.HasOne("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", "Members")
@@ -599,6 +571,13 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.Navigation("Books");
 
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Book", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Sales");
                 });
 
             modelBuilder.Entity("YarnsAndMobileRCOnlineBookStore.Models.Data.Member", b =>
