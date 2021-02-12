@@ -16,6 +16,7 @@ using YarnsAndMobileRCOnlineBookStore.Models.ImportModels;
 using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 using YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -44,24 +45,55 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         [BindProperty]
         public Member Users { get; set; }
 
-        [Route("MemberIndex")]
-        public IActionResult MemberIndex()
+        [Route("/Admin/MemberIndex")]
+        public async Task<IActionResult> MemberIndex(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            List<Member> users = new List<Member>();
+            ViewBag.CurentSort = sortOrder;
+            ViewBag.AccountSort = String.IsNullOrEmpty(sortOrder) ? "AccountNumber" : "";
+            ViewBag.FirstNameSort = sortOrder == "FirstName" ? "LastName" : "FirstName";
+            ViewBag.LastNameSort = sortOrder == "LastName" ? "FirstName" : "LastName";
+            ViewBag.EmailSort = sortOrder == "Email" ? "AccountNumber" : "Email";
 
-            foreach (var member in _dbContext.Members)
+            if (searchString != null)
             {
-                Users = new Member
-                {
-                    AccountNumber = member.AccountNumber,
-                    Email = member.Email,
-                    FirstName = member.FirstName,
-                    LastName = member.LastName
-                };
-                users.Add(Users);
+                pageNumber = 1;
             }
-            
-            return View(users.ToList());
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var members = from member in _dbContext.Members select member;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                members = members.Where(member => member.AccountNumber.Contains(searchString)
+                                       || member.FirstName.Contains(searchString)
+                                       || member.LastName.Contains(searchString)
+                                       || member.Email.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "AccountNumber":
+                    members = members.OrderBy(s => s.AccountNumber);
+                    break;
+                case "FirstName":
+                    members = members.OrderBy(s => s.FirstName).OrderByDescending(s=> s.LastName);
+                    break;
+                case "LastName":
+                    members = members.OrderBy(s => s.LastName).OrderByDescending(s=> s.FirstName);
+                    break;
+                case "Email":
+                    members = members.OrderBy(s => s.Email);
+                    break;
+                default:
+                    members = members.OrderBy(s => s.FirstName);
+                    break;
+            }
+            int pageSize = 10;
+            return View(await PaginatedList<Member>.CreateAsync(members.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
 
@@ -224,7 +256,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     Image = importBook.Image,
                     ISBN = importBook.ISBN,
                     SalePrice = importBook.Price,
-                    Title = importBook.Title
+                    Title = importBook.Title,
                 };
                 _dbContext.Books.Add(book);
                 _dbContext.SaveChanges();
@@ -248,9 +280,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 {
                     var sale = new Sale
                     {
-                        PurchaseDate = importSaleReview.SaleDate.GetValueOrDefault(),
+                        PurchaseDate = importSaleReview.SaleDate.GetValueOrDefault().Date,
                         Price = importSaleReview.SalePrice.GetValueOrDefault(),
-                        Title = book.Title,
                         Books = book,
                         Members = member
                     };

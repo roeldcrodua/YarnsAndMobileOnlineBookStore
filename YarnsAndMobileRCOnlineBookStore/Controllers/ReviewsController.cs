@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YarnsAndMobileRCOnlineBookStore.Data;
 using YarnsAndMobileRCOnlineBookStore.Models;
+using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
@@ -20,9 +21,53 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         }
 
         // GET: Reviews
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            return View(await _context.Reviews.ToListAsync());
+            ViewBag.CurentSort = sortOrder;
+            ViewBag.TitleSort = String.IsNullOrEmpty(sortOrder) ? "Title" : "";
+            ViewBag.DateSort = sortOrder == "ReviewDate" ? "Email" : "ReviewDate";
+            ViewBag.EmailSort = sortOrder == "Email" ? "ReviewDate" : "Email";
+            ViewBag.StarSort = sortOrder == "StarRating" ? "ReviewDate" : "StarRating";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var reviews = from review in _context.Reviews select review;
+            reviews = reviews.Include(c => c.Books).Include(m => m.Members);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                reviews = reviews.Where(review => review.Books.Title.Contains(searchString)
+                                       || review.Members.Email.Contains(searchString)
+                                       || (review.StarRating.HasValue && 
+                                       review.StarRating.Value.Equals(int.Parse(searchString)))
+                                       || (review.ReviewDate.HasValue && 
+                                       review.ReviewDate.Value.Equals(DateTime.Parse(searchString).ToShortDateString())));
+            }
+            switch (sortOrder)
+            {
+                case "Title":
+                    reviews = reviews.OrderBy(r => r.Books.Title);
+                    break;
+                case "StarRating":
+                    reviews = reviews.OrderByDescending(r => r.StarRating);
+                    break;
+                case "Email":
+                    reviews = reviews.OrderByDescending(r => r.Members.Email);
+                    break;
+                default:
+                    reviews = reviews.OrderBy(r => r.ReviewDate);
+                    break;
+            }
+            int pageSize = 10;
+            return View(await PaginatedList<Review>.CreateAsync(reviews.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Reviews/Details/5

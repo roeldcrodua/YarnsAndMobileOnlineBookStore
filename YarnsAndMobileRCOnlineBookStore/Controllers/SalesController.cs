@@ -24,9 +24,54 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         }
 
         // GET: Sales
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            return View(await _context.Sales.ToListAsync());
+            ViewBag.CurentSort = sortOrder;
+            ViewBag.TitleSort = String.IsNullOrEmpty(sortOrder) ? "Title" : "PurchaseDate";
+            ViewBag.MemberSort = sortOrder == "Email" ? "Title" : "Email";
+            ViewBag.BookSort = sortOrder == "Title" ? "Email" : "Title";
+            ViewBag.PriceSort = sortOrder == "Price" ? "PurchaseDate" : "Price";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var sales = from sale in _context.Sales select sale;
+            sales = sales.Include(c => c.Books).Include(m => m.Members);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                sales = sales.Where(sale => sale.Books.Title.Contains(searchString)
+                                       || sale.Members.Email.Contains(searchString)
+                                       || sale.Books.Title.Contains(searchString)
+                                       || sale.Price.Equals(decimal.Parse(searchString))
+                                       || sale.PurchaseDate.Equals(DateTime.Parse(searchString).ToShortDateString()));
+            }
+            
+            switch (sortOrder)
+            {
+                case "Title":
+                    sales = sales.OrderBy(s => s.Books.Title);
+                    //sales = (IQueryable<Sale>)(Sale)bookTitles;
+                    break;
+                case "Email":
+                    sales = sales.OrderBy(s => s.Members.Email);
+                    break;
+                case "Price":
+                    sales = sales.OrderByDescending(s => s.Price);
+                    break;
+                default:
+                    sales = sales.OrderBy(s => s.PurchaseDate);
+                    break;
+            }
+            int pageSize = 10;
+            return View(await PaginatedList<Sale>.CreateAsync(sales.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Sales/Details/5
@@ -164,5 +209,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         {
             return _context.Sales.Any(e => e.OrderId == id);
         }
+
     }
 }

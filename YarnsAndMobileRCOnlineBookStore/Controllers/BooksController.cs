@@ -56,7 +56,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             switch (sortOrder)
             {
                 case "CopyrightYear":
-                    books = books.OrderByDescending(s => s.CopyrightYear);
+                    books = books.OrderBy(s => s.CopyrightYear);
                     break;
                 case "AuthorFirstName":
                     books = books.OrderBy(s => s.AuthorFirstName);
