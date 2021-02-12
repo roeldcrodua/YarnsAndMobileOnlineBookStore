@@ -20,9 +20,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
 
         [Column(TypeName = "decimal(5,2)")]
         public Decimal SalePrice { get; set; }
-        [Required]
-        public virtual Member Member { get; set; }
-        [Required]
-        public virtual Book Books { get; set; }
+        public virtual ICollection<Sale> Sales { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }
