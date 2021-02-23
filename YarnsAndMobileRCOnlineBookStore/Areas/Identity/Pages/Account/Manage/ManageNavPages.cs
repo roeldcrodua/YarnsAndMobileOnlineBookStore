@@ -9,7 +9,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
     public static class ManageNavPages
     {
         public static string Index => "Index";
-        public static string PhoneNumber => "PhoneNumber";
+
         public static string Email => "Email";
 
         public static string ChangePassword => "ChangePassword";
@@ -25,7 +25,6 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
-        public static string PhoneNumberNavClass(ViewContext viewContext) => PageNavClass(viewContext, PhoneNumber);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 

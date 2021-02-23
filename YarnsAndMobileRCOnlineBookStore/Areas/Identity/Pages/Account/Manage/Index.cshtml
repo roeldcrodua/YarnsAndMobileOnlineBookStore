@@ -12,7 +12,7 @@
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Input.AccountNumber" ></label>
+                <label asp-for="Input.AccountNumber"></label>
                 <input asp-for="Input.AccountNumber" class="form-control" disabled />
                 <span asp-validation-for="Input.AccountNumber" class="text-danger"></span>
             </div>
@@ -30,6 +30,56 @@
                 <label asp-for="Input.LastName"></label>
                 <input asp-for="Input.LastName" class="form-control" />
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Phone1"></label>
+                <input asp-for="Input.Phone1" class="form-control" />
+                <span asp-validation-for="Input.Phone1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Phone2"></label>
+                <input asp-for="Input.Phone2" class="form-control" />
+                <span asp-validation-for="Input.Phone2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Phone3"></label>
+                <input asp-for="Input.Phone3" class="form-control" />
+                <span asp-validation-for="Input.Phone3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Phone4"></label>
+                <input asp-for="Input.Phone4" class="form-control" />
+                <span asp-validation-for="Input.Phone4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Line1"></label>
+                <input asp-for="Input.Line1" class="form-control" />
+                <span asp-validation-for="Input.Line1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Line2"></label>
+                <input asp-for="Input.Line2" class="form-control" />
+                <span asp-validation-for="Input.Line2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Street"></label>
+                <input asp-for="Input.Street" class="form-control" />
+                <span asp-validation-for="Input.Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.City"></label>
+                <input asp-for="Input.City" class="form-control" />
+                <span asp-validation-for="Input.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.State"></label>
+                <input asp-for="Input.State" class="form-control" />
+                <span asp-validation-for="Input.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Zip"></label>
+                <input asp-for="Input.Zip" class="form-control" />
+                <span asp-validation-for="Input.Zip" class="text-danger"></span>
             </div>
 
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
