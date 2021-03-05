@@ -179,7 +179,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Areas.Identity.Pages.Account.Manage
             {
                 if (User.IsInRole("Admin") == true)
                 {
-                    user = _dbContext.Members.Find(member.Id);
+                    user = await _dbContext.Members.FindAsync(member.Id);
                 }
                 else
                 {
