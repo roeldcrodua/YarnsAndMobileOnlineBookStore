@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YarnsAndMobileRCOnlineBookStore.Data;
 using YarnsAndMobileRCOnlineBookStore.Models;
+using YarnsAndMobileRCOnlineBookStore.Models.Data;
 using YarnsAndMobileRCOnlineBookStore.Views.Admin;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
@@ -14,12 +17,38 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
     public class ReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ReviewsController(ApplicationDbContext context)
+        private readonly UserManager<Member> _userManager;
+        private readonly SignInManager<Member> _signInManager;
+        public ReviewsController(ApplicationDbContext context, UserManager<Member> userManager, SignInManager<Member> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
+        [BindProperty]
+        public InputModel Input { get; set; }
+        public class InputModel
+        {
+            public string MemberId { get; set; }
 
+            [Display(Name = "Member Email")]
+            public string Email { get; set; }
+
+            [Display(Name = "Book Title")]
+            public string BookTitle { get; set; }
+
+            [Display(Name = "Review Title")]
+            public string ReviewTitle { get; set; }
+            [Display(Name = "Review Text")]
+            public string ReviewText { get; set; }
+
+            [Display(Name = "Review Date")]
+
+            public DateTime ReviewDate { get; set; }
+            public int BookId { get; set; }
+            public int StarRating { get; set; }
+            
+        }
         // GET: Reviews
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
@@ -45,11 +74,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 reviews = reviews.Where(review => review.Books.Title.Contains(searchString)
-                                       || review.Members.Email.Contains(searchString)
-                                       || (review.StarRating.HasValue && 
-                                       review.StarRating.Value.Equals(int.Parse(searchString)))
-                                       || (review.ReviewDate.HasValue && 
-                                       review.ReviewDate.Value.Equals(DateTime.Parse(searchString).ToShortDateString())));
+                                       || review.Members.Email.Contains(searchString));
+
             }
             switch (sortOrder)
             {
@@ -78,7 +104,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
+            var review = await _context.Reviews.Include(m => m.Members).Include(b => b.Books)
                 .FirstOrDefaultAsync(m => m.ReviewId == id);
             if (review == null)
             {
@@ -89,9 +115,38 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int id)
         {
-            return View();
+            var book = _context.Books.Find(id);
+            if (_signInManager.IsSignedIn(User))
+            {
+                var member = await _userManager.GetUserAsync(User);
+
+                var review = await _context.Reviews.Include(m => m.Members).Include(b => b.Books).FirstOrDefaultAsync(m => m.Members.Id == member.Id && m.Books.BookId == book.BookId);
+
+                if (review != null)
+                {
+                    return RedirectToAction("Edit", new {id = review.ReviewId });
+                }
+                Input = new InputModel
+                {
+                    ReviewDate = DateTime.Now.Date,
+                    ReviewTitle = "",
+                    BookId = book.BookId,
+                    BookTitle = book.Title,
+                    ReviewText = "",
+                    StarRating = 1,
+                    MemberId = member.Id,
+                    Email = member.Email
+
+                };
+                return View(Input);
+            }
+            else
+            {
+             
+                return RedirectPreserveMethod("~/Identity/Account/Register");
+            }
         }
 
         // POST: Reviews/Create
@@ -99,10 +154,33 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewId,Title,Text,StarRating,ReviewDate")] Review review)
+        public async Task<IActionResult> Create(int id, [Bind("ReviewId,ReviewTitle,ReviewText,StarRating,ReviewDate")] Review review)
         {
             if (ModelState.IsValid)
             {
+                var book = _context.Books.Find(id);
+                var member = await _userManager.GetUserAsync(User);
+
+                review.ReviewDate = DateTime.Now.Date;
+                review.Members = member;
+                review.Books = book;
+
+                if (Input.ReviewTitle == "") { }
+                else if (Input.ReviewTitle != review.Title)
+                {
+                    review.Title = Input.ReviewTitle;
+                }
+                if (Input.StarRating > 0) { }
+                else if (Input.StarRating != review.StarRating)
+                {
+                    review.StarRating = Input.StarRating;
+                }
+                if (Input.ReviewText == "") { }
+                else if (Input.ReviewText != review.Text)
+                {
+                    review.Text = Input.ReviewText;
+                }
+                
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -118,7 +196,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _context.Reviews.Include(m => m.Members).Include(b => b.Books).FirstOrDefaultAsync(m => m.ReviewId == id);
             if (review == null)
             {
                 return NotFound();
@@ -169,7 +247,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
+            var review = await _context.Reviews.Include(m => m.Members).Include(b => b.Books)
                 .FirstOrDefaultAsync(m => m.ReviewId == id);
             if (review == null)
             {

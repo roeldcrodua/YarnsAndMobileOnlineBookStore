@@ -3,16 +3,20 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<p></p>
+<h1>Edit Review</h1>
 
-<h1>Edit</h1>
-
-<h4>Review</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ReviewId" />
+            <div class="form-group">
+                <label class="control-label">Book Title</label>
+                <input asp-for="Books.Title" class="form-control" disabled />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -30,8 +34,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="ReviewDate" class="control-label"></label>
-                <input asp-for="ReviewDate" class="form-control" />
+                <input asp-for="ReviewDate" class="form-control" disabled />
                 <span asp-validation-for="ReviewDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Members.Email" class="control-label"></label>
+                <input asp-for="Members.Email" class="form-control" disabled />
+                <span asp-validation-for="Members.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

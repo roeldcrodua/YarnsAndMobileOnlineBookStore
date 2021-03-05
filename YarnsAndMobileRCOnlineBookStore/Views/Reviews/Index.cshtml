@@ -1,84 +1,53 @@
 ﻿@model YarnsAndMobileRCOnlineBookStore.Controllers.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Review>
+@using Microsoft.AspNetCore.Identity
+@using YarnsAndMobileRCOnlineBookStore.Models.Data
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
 
 @{
     ViewData["Title"] = "Review Index";
 }
 
+<p></p>
 <h1>Review Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
             <em>Find by Date or Email: </em>
-            <input type="text" class ="w-50" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="text" class="w-50" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" />
             <a asp-action="Index">Back to Full List</a>
         </p>
     </div>
 </form>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">
-                @Html.ActionLink("Book", "Index", new { sortOrder = ViewBag.TitleSort, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th scope="col">
-                Title
-            </th>
-            <th scope="col">
-                Text
-            </th>
-            <th scope="col">
-                @Html.ActionLink("StarRating", "Index", new { sortOrder = ViewBag.StarSort, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th scope="col">
-                @Html.ActionLink("ReviewDate", "Index", new { sortOrder = ViewBag.DateSort, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th scope="col">
-                @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSort, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr class="flex-column">
-            <td>
-                @Html.DisplayFor(modelItem => item.Books.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td >
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StarRating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Members.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ReviewId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-<br />
+
+<div>
+    @foreach (var item in Model)
+    {
+        <ul>
+            <li class="list-unstyled ">
+                <div class="d-inline-flex">
+                    <div>
+                        <img width="200" height="200" src="@item.Books.Image">
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-danger h3">@Html.DisplayFor(modelItem => item.Books.Title)</p>
+                        <p class="h5 text-primary">Review Rating: @Html.DisplayFor(modelItem => item.StarRating) <strong class="text-dark">@Html.DisplayFor(modelItem => item.Title)</strong></p>
+                        <h6 class="text-justify"><em>@Html.DisplayFor(modelItem => item.Text)</em></h6>
+                        <h6>@Html.DisplayFor(modelItem => item.ReviewDate.Value.Date)</h6>
+                        <h6 class="text-primary">By @Html.DisplayFor(modelItem => item.Members.Email)</h6>
+                        <a  asp-action="Edit" asp-route-id="@item.ReviewId">Edit |</a>
+                        <a  asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+
+    }
+</div>
+
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -103,13 +72,6 @@
                class="page-link ">
                 Previous
             </a>
-        </li>
-        <li class="page-item active">
-            <a asp-action="Index"
-               asp-route-sortOrder="@ViewData["CurrentSort"]"
-               asp-route-pageNumber="@(Model.PageIndex)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="page-link ">@(Model.PageIndex)</a>
         </li>
         @if (Model.TotalPages > 0)
         {
@@ -166,3 +128,8 @@
     </div>
 </div>
 
+<br />
+<p></p>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

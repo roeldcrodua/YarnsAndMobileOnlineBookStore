@@ -80,10 +80,10 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     members = members.OrderBy(s => s.AccountNumber);
                     break;
                 case "FirstName":
-                    members = members.OrderBy(s => s.FirstName).OrderByDescending(s=> s.LastName);
+                    members = members.OrderBy(s => s.FirstName).OrderByDescending(s => s.LastName);
                     break;
                 case "LastName":
-                    members = members.OrderBy(s => s.LastName).OrderByDescending(s=> s.FirstName);
+                    members = members.OrderBy(s => s.LastName).OrderByDescending(s => s.FirstName);
                     break;
                 case "Email":
                     members = members.OrderBy(s => s.Email);
@@ -190,7 +190,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     State = importMember.State,
                     Zip = importMember.Zip,
                     Members = member
-                    
+
                 };
 
                 var phone = new Phone
@@ -248,12 +248,15 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var keyValue = new Dictionary<int, int>();
             foreach (var importBook in importBooks)
             {
+                var random = new Random();
+                var picture = random.Next(0, 10000);
+
                 var book = new Book
                 {
                     AuthorFirstName = importBook.AuthorFirstName,
                     AuthorLastName = importBook.AuthorLastName,
                     CopyrightYear = importBook.Year,
-                    Image = importBook.Image,
+                    Image = $"https://picsum.photos/200?random={picture}",
                     ISBN = importBook.ISBN,
                     SalePrice = importBook.Price,
                     Title = importBook.Title,

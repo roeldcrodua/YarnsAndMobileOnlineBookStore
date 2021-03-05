@@ -1,6 +1,6 @@
 ﻿@model YarnsAndMobileRCOnlineBookStore.Models.Sale
-
-<h4>Sale</h4>
+<p></p>
+<h1>Edit Sale</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -8,8 +8,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OrderId" />
             <div class="form-group">
+                <label asp-for="OrderId" class="control-label"></label>
+                <input asp-for="OrderId" class="form-control" disabled />
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
+                <input asp-for="PurchaseDate" class="form-control" disabled />
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -18,9 +23,14 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Books.Title" class="control-label"></label>
-                <input asp-for="@Model.Books.Title" class="form-control" />
-                <span asp-validation-for="@Model.Books.Title" class="text-danger"></span>
+                <label asp-for="Books.Title" class="control-label"></label>
+                <input asp-for="Books.Title" class="form-control" disabled />
+                <span asp-validation-for="Books.Title" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Members.Email" class="control-label"></label>
+                <input asp-for="Members.Email" class="form-control" disabled />
+                <span asp-validation-for="Members.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

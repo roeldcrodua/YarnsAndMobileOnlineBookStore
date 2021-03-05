@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,19 +14,41 @@ using YarnsAndMobileRCOnlineBookStore.Models.Data;
 
 namespace YarnsAndMobileRCOnlineBookStore.Controllers
 {
-    public class SalesController : Controller
+    public partial class SalesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Member> _userManager;
+        private readonly SignInManager<Member> _signInManager;
 
-        public SalesController(ApplicationDbContext context, UserManager<Member> userManager)
+        public SalesController(ApplicationDbContext context, UserManager<Member> userManager, SignInManager<Member> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
+        [BindProperty]
+        public InputModel Input { get; set; }
+        public class InputModel
+        {
+            public string MemberId { get; set; }
+            [Display(Name = "Account Number")]
+            public string AccountNumber { get; set; }
 
-        // GET: Sales
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Display(Name = "Book Title")]
+            public string Title { get; set; }
+
+            [Display(Name = "Purchased Date")]
+
+            public DateTime PurchaseDate { get; set; }
+            public int BookId { get; set; }
+
+            public decimal Price { get; set; }
+        }
+            // GET: Sales
+            public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewBag.CurentSort = sortOrder;
             ViewBag.TitleSort = String.IsNullOrEmpty(sortOrder) ? "Title" : "PurchaseDate";
@@ -49,9 +73,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             {
                 sales = sales.Where(sale => sale.Books.Title.Contains(searchString)
                                        || sale.Members.Email.Contains(searchString)
-                                       || sale.Books.Title.Contains(searchString)
-                                       || sale.Price.Equals(decimal.Parse(searchString))
-                                       || sale.PurchaseDate.Equals(DateTime.Parse(searchString).ToShortDateString()));
+                                       || sale.Members.UserName.Contains(searchString));
+
             }
             
             switch (sortOrder)
@@ -82,8 +105,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+            var sale = await _context.Sales.Include(m=>m.Members).Include(b=>b.Books).FirstOrDefaultAsync(m => m.OrderId == id);
             if (sale == null)
             {
                 return NotFound();
@@ -93,17 +115,30 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         }
 
         // GET: Sales/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create(int id)
         {
             var book = _context.Books.Find(id);
-            var sale = new Sale
+            if (_signInManager.IsSignedIn(User))
             {
-                Books = book,
-                Price = book?.SalePrice ?? 0,
-                PurchaseDate = DateTime.Now,
-                Members = _userManager.GetUserAsync(User).Result
-            };
-            return View(sale);
+                var member = await _userManager.GetUserAsync(User);
+
+                Input = new InputModel
+                {
+                    PurchaseDate = DateTime.Now.Date,
+                    Price = book?.SalePrice ?? 0,
+                    Title = book.Title,
+                    BookId = book.BookId,
+                    AccountNumber = member.AccountNumber,
+                    Email = member.Email
+
+                };
+                return View(Input);
+            }
+            else
+            {
+
+                return RedirectPreserveMethod("~/Identity/Account/Register");
+            }
         }
 
         // POST: Sales/Create
@@ -111,13 +146,31 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Sale sale)
+        [Authorize]
+        public async Task<IActionResult> Create(int id, Sale sale)
         {
             if (ModelState.IsValid)
             {
-                sale.Members = _context.Members.Find(_userManager.GetUserAsync(User));
-                sale.Books = _context.Books.Find(sale.Books.BookId);
-                sale.OrderId = 0;
+
+                var book = _context.Books.Find(id);
+                var member = await _userManager.GetUserAsync(User);
+
+                Input = new InputModel
+                {
+                    PurchaseDate = DateTime.Now.Date,
+                    Price = book?.SalePrice ?? 0,
+                    Title = book.Title,
+                    BookId = book.BookId,
+                    AccountNumber = member.AccountNumber,
+                    Email = member.Email
+
+                };
+
+                sale.PurchaseDate = Input.PurchaseDate;
+                sale.Price = Input.Price;
+                sale.Members = member;
+                sale.Books = book;
+
                 _context.Add(sale);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -133,7 +186,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var sale = await _context.Sales.FindAsync(id);
+            var sale = await _context.Sales.Include(m => m.Members).Include(b => b.Books).FirstOrDefaultAsync(m => m.OrderId == id);
             if (sale == null)
             {
                 return NotFound();
@@ -184,8 +237,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 return NotFound();
             }
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+            var sale = await _context.Sales.Include(m => m.Members).Include(b => b.Books).FirstOrDefaultAsync(m => m.OrderId == id);
             if (sale == null)
             {
                 return NotFound();

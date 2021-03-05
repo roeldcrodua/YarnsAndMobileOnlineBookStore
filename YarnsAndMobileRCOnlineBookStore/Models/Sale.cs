@@ -18,8 +18,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         [DisplayName("Purchased Date")]
         public DateTime PurchaseDate { get; set; }
 
-        [Column(TypeName = "decimal(5,2)")]
         [DisplayName("Sale Price")]
+        [Column(TypeName = "decimal(5,2)")]
         public decimal Price { get; set; }
         public virtual Member Members { get; set; }
         public virtual Book Books { get; set; }

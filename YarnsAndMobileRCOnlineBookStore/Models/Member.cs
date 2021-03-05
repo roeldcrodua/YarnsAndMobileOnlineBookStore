@@ -11,7 +11,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models.Data
     public class Member : IdentityUser
     {
         public int MemberId { get; set; }
-
+       
         [Display(Name = "Account Number")]
         public string AccountNumber { get; set; }
      

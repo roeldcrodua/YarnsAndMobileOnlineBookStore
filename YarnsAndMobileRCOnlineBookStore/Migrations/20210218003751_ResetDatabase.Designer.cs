@@ -10,8 +10,8 @@ using YarnsAndMobileRCOnlineBookStore.Data;
 namespace YarnsAndMobileRCOnlineBookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210212025527_InititalDB")]
-    partial class InititalDB
+    [Migration("20210218003751_ResetDatabase")]
+    partial class ResetDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c0099cbc-b150-4687-b542-6909de334bae",
-                            ConcurrencyStamp = "1bd9b1b6-1f96-46cc-90dd-c7cbeb2cc751",
+                            Id = "5a834a61-f473-41e4-8b2d-e423009a5bdb",
+                            ConcurrencyStamp = "d0072cc2-79ef-44ce-8fd6-f1a33d855fb6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -428,7 +428,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("SalePrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<int?>("StarRating")
                         .HasColumnType("int");

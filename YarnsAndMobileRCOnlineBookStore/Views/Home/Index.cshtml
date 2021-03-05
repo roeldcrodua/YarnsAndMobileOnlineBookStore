@@ -1,23 +1,160 @@
-﻿@{
+﻿@model YarnsAndMobileRCOnlineBookStore.Controllers.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Book>
+@using PagedList.Mvc;
+@using System;
+@using Microsoft.AspNetCore.Identity
+@using YarnsAndMobileRCOnlineBookStore.Models.Data
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
+@{
     ViewData["Title"] = "Home Page";
 }
-
+@{
+    var email = User.Identity.Name;
+    var adminOnly = !SignInManager.IsSignedIn(User) || !User.IsInRole("Admin") ? "disabled" : "";
+    var adminDisable = User.IsInRole("Admin") ? "disabled" : "";
+    var needLogin = !SignInManager.IsSignedIn(User) ? "disable" : "";
+}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Yarns&Aacute;Mobile</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <p>
-        <h1>Welcome Visitor</h1>
-    </p>
+    <p></p>
+    <div class="container3D ">
+        <h1 class="name text-dark text-center">Book's Gallery</h1>
+        <form class="form-inline my-2 my-lg-0" asp-action="Index" method="get">
+            <div class="form-actions no-color w-100">
+                <p class="text-dark h5 text-center">
+                    Find by Title or Author:
+                    <input type="text" class="form-control mr-sm-2 w-50" placeholder="Search" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                    <button class="btn btn-secondary my-2 my-sm-0 btn-outline-primary" type="submit">Search</button>
+                </p>
+            </div>
+        </form>
+        <br />
+        <p></p>
+        <div class="scroll-list ">
+            @foreach (var item in Model)
+            {
+                <ul class=" ">
+                    <li class="list-unstyled ">
+                        <span>   </span>
+                        <div class="cube-container">
+                            <div class="photo-cube">
+                                <div class="front photo-desc" style="background-image:url(@item.Image)">
+                                    <h2 class="text-wrap text-danger"> @Html.DisplayFor(modelItem => item.Title)</h2>
 
-        <div >
-            <img src="https://yarnsandmobileblobs.blob.core.windows.net/images/yarns_and_mobile_logo.png" alt="Image" />
+                                </div>
+                                <img class="left" src="@item.Image" alt="">
+                                <img class="right" src="@item.Image" alt="">
+                                <div class="back photo-desc">
+                                    <h5 class="text-danger"> @Html.DisplayFor(modelItem => item.Title)</h5>
+                                    <h6>Author: @Html.DisplayFor(modelItem => item.AuthorFirstName) @Html.DisplayFor(modelItem => item.AuthorLastName) </h6>
+                                    <h6>Copyright Year: @Html.DisplayFor(modelItem => item.CopyrightYear)</h6>
+                                    <br>
+                                    <a asp-action="Create" asp-controller="Sales" asp-route-id="@item.BookId" class="button h6 @adminDisable ">Buy</a>
+                                    <br>
+                                    <a asp-action="Create" asp-controller="Reviews" asp-route-id="@item.BookId" class="button h6 @adminDisable">Review</a>
+                                </div>
+                            </div>
+                            <br />
+                            <h5 class="text-dark">Sale Price: <em class="text-danger font-weight-bold">$@Html.DisplayFor(modelItem => item.SalePrice)</em></h5>
+
+                        </div>
+
+                    </li>
+                </ul>
+            }
         </div>
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
 
+    <div class="text-center">
+        <ul class="pagination">
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="1"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="page-link ">
+                    First
+                </a>
+            </li>
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="page-link ">
+                    Previous
+                </a>
+            </li>
+            @if (Model.TotalPages > 0)
+            {
+                int pageNum;
+                int pageLimit = 10;
+                if (Model.TotalPages > pageLimit)
+                    pageLimit = 10;
+                else
+                    pageLimit = Model.TotalPages;
+
+                @for (int i = 0; i < pageLimit; i++)
+                {
+                    pageNum = Model.PageIndex + i;
+                    var currentIndex = Model.PageIndex == pageNum ? "active" : "";
+                    if (pageNum <= Model.TotalPages)
+                    {
+                        <li class="page-item @(currentIndex)">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(pageNum)"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                               class="page-link">@(pageNum)</a>
+                        </li>
+                    }
+                }
+            }
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="page-link ">
+                    Next
+                </a>
+            </li>
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.TotalPages)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="page-link ">
+                    Last
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="container" style="margin-left: 20px">
+        <p></p>
+        <p></p>
+        <div class="pagination" style="margin-left: 400px">
+            Page @(Model.PageIndex < Model.TotalPages ? Model.PageIndex : 1) of @Model.TotalPages
+
+        </div>
+    </div>
 </body>
 </html>
-
-
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<br />

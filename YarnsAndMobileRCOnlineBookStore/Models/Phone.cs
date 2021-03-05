@@ -9,6 +9,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
 {
     public class Phone
     {
+        [Key]
         public int PhoneId { get; set; }
         public string Phone1 { get; set; }
         public string Phone2 { get; set; }

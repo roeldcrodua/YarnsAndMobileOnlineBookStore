@@ -1,20 +1,29 @@
 ﻿@model YarnsAndMobileRCOnlineBookStore.Controllers.PaginatedList<YarnsAndMobileRCOnlineBookStore.Models.Book>
 @using PagedList.Mvc;
+@using Microsoft.AspNetCore.Identity
+@using YarnsAndMobileRCOnlineBookStore.Models.Data
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
 
 @{
     ViewData["Title"] = "Book Index";
 }
 
-<h1>Index</h1>
+@{
+    var adminOnly = !SignInManager.IsSignedIn(User) || !User.IsInRole("Admin") ? "invisible" : "";
+    var adminDisable = User.IsInRole("Admin") ? "disabled" : "";
+}
+<p></p>
+<h1>Book Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="@adminOnly" asp-action="Create">Create New</a>
 </p>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
-        <p>
-            <em>Find by Title or Nme: </em>
+        <p class="text-dark h5 text-center">
+            Find by Title or Name: 
             <input type="text" class="w-50" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" />
             <a asp-action="Index">Back to Full List</a>
@@ -48,7 +57,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr class="table-light">
+        <tr class="ttable-active">
             <td>
                 @Html.DisplayFor(modelItem => item.ISBN)
             </td>
@@ -66,21 +75,20 @@
                 @Html.DisplayFor(modelItem => item.CopyrightYear)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SalePrice)
+                $@Html.DisplayFor(modelItem => item.SalePrice)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                <a class="@adminOnly" asp-action="Edit" asp-route-id="@item.BookId">Edit |</a>
+                <a class="@adminOnly" asp-action="Delete" asp-route-id="@item.BookId">Delete |</a>
+                <a asp-action="Details" asp-route-id="@item.BookId">Details |</a>
+                <a asp-action="Review" asp-route-id="@item.BookId">Review |</a>
+                <a @adminDisable asp-action="Create" asp-controller="Sales" asp-route-id="@item.BookId">Buy</a>
             </td>
         </tr>
         }
     </tbody>
 </table>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-<br />
+
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -106,13 +114,6 @@
                 Previous
             </a>
         </li>
-        <li class="page-item active">
-            <a asp-action="Index"
-               asp-route-sortOrder="@ViewData["CurrentSort"]"
-               asp-route-pageNumber="@(Model.PageIndex)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="page-link ">@(Model.PageIndex)</a>
-        </li>
         @if (Model.TotalPages > 0)
         {
             int pageNum;
@@ -122,19 +123,19 @@
             else
                 pageLimit = Model.TotalPages;
 
-            @for (int i = 0; i < pageLimit; i++)
+        @for (int i = 0; i < pageLimit; i++)
             {
                 pageNum = Model.PageIndex + i;
                 var currentIndex = Model.PageIndex == pageNum ? "active" : "";
                 if (pageNum <= Model.TotalPages)
                 {
-                    <li class="page-item @(currentIndex)">
-                        <a asp-action="Index"
-                           asp-route-sortOrder="@ViewData["CurrentSort"]"
-                           asp-route-pageNumber="@(pageNum)"
-                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                           class="page-link">@(pageNum)</a>
-                    </li>
+        <li class="page-item @(currentIndex)">
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(pageNum)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="page-link">@(pageNum)</a>
+        </li>
                 }
             }
         }
@@ -170,3 +171,8 @@
 
 
 
+<br />
+<p></p>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

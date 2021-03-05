@@ -2,76 +2,86 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    font-size: 14px;
+    height: auto;
 }
 
+
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    background-color: white;
+    box-shadow: rgb(51, 51, 51) 10px 0px 40px, rgb(51, 51, 51) -10px 0px 40px;
+    border-left: 1px solid rgb(153, 0, 153);
+    border-right: 1px solid rgb(153, 0, 153);
+    height: auto;
+    margin: 0px auto;
+    min-width: 320px;
+    max-width: 1200px;
+    width: 100%;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    color: black;
+    background-color: #158cba;
+    font-size: 1.25em;
+    font-style: normal;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
 }
 
 
 /* Added by Roel*/
+
 
 
 /* ================================= 
@@ -107,7 +117,7 @@ h3 {
 }
 
 p {
-    font-size: .875em;
+    font-size: 1.5em;
     line-height: 1.4;
     margin: 0 0 1.5em;
 }
@@ -126,17 +136,17 @@ p {
 .container {
     width: 100%;
     max-width: 90%;
-
 }
 
 .color-menu {
-    background-color: #158cba;
+    background: linear-gradient(to right, #158cba 30%, black);
 }
+
 .container3D {
     width: 100%;
     max-width: 200%;
-
 }
+
 .main-header {
     text-align: center;
     padding: 2.8em 0 3.8em;
@@ -168,7 +178,7 @@ p {
 }
 
 .button {
-    font-size: .8em;
+    font-size: 1.2em;
     color: #fff;
     width: 90%;
     line-height: 1.15;
@@ -288,7 +298,6 @@ p {
 .scroll-list {
     display: flex;
     flex-wrap: wrap;
-
 }
 
 
@@ -405,3 +414,79 @@ p {
         padding: 0.5rem 0 0;
     }
 }
+
+ul#browser li a:hover {
+    color: white;
+    background-color: rgb(153, 0, 153);
+}
+
+a#navicon {
+    display: none;
+}
+
+/* ===============================
+   Mobile Styles: 0px to 640px 
+   ===============================
+*/
+@media only screen and (max-width: 1199px) {
+
+    a#navicon {
+        display: block;
+    }
+
+    #browser {
+        display: none;
+    }
+
+        #browser li {
+            font-size: 1em;
+            line-height: 1.3em;
+            height: 1.3em;
+        }
+
+        #navicon:hover + div > ul#browser, #browser:hover {
+            display: block;
+        }
+}
+
+/* =============================================
+   Tablet and Desktop Styles: greater than 640px
+   =============================================
+*/
+@media only screen and (min-width: 1200px) {
+
+    #browser {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: row nowrap;
+        flex-flow: row nowrap;
+        -webkit-justify-content: center;
+        justify-content: center;
+    }
+
+        #browser li {
+            -webkit-flex: 0 1 auto;
+            flex: 0 1 auto;
+        }
+}
+
+header {
+    background-color: #158cba;
+    border-bottom: 1px solid rgb(153, 0, 153);
+    color: white;
+    line-height: 10px;
+}
+
+    header h2#header {
+        font-family: Verdana, Geneva, sans-serif;
+        color: darkorange;
+        font-size: xx-large;
+        text-transform: capitalize;
+        margin-left: 15px;
+        justify-content: center;
+    }
+
+        header h2#header em {
+            font-size: 0.7em;
+            color: red;
+        }
