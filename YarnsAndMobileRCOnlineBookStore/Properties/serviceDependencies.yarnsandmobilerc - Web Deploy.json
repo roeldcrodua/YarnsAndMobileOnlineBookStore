@@ -1,10 +1,22 @@
 {
   "dependencies": {
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "DefaultConnection2",
+      "suggestion": "true",
+      "ignored": "true"
+    },
     "mssql1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/yarnsandmobileserverdb/databases/YarnsAndMobileDB",
-      "type": "mssql.azure",
+      "type": "mssql",
       "connectionId": "DefaultConnection",
-      "secretStore": "AzureAppSettings"
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "AzureStorageAccountConnection",
+      "suggestion": "true",
+      "ignored": "true"
     }
   }
 }
