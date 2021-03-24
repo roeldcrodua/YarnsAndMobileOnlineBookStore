@@ -169,6 +169,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var importMembers = JsonConvert.DeserializeObject<List<MemberImport>>(jsonFile);
 
             var keyValue = new Dictionary<int, string>();
+
+            // added to limit for initial 10 members only
+            int i = 0;
             foreach (var importMember in importMembers)
             {
                 var member = new Member
@@ -202,12 +205,17 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     Members = member
                 };
 
-
                 _dbContext.Phones.Add(phone);
                 _dbContext.Addresses.Add(address);
                 _dbContext.Members.Add(member);
                 keyValue.Add(importMember.Id, member.Id);
 
+                // added to limit for initial 10 members only
+                if (i > 10)
+                {
+                    break;
+                }
+                i++;
             }
             _dbContext.SaveChanges();
             return keyValue;
@@ -245,6 +253,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var jsonFile = System.IO.File.ReadAllText(GetFileName(UploadType.Book));
             var importBooks = JsonConvert.DeserializeObject<List<BookImport>>(jsonFile);
 
+            // added to limit for initial 20 books only
+            int i = 0;
+
             var keyValue = new Dictionary<int, int>();
             foreach (var importBook in importBooks)
             {
@@ -264,6 +275,13 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                 _dbContext.Books.Add(book);
                 _dbContext.SaveChanges();
                 keyValue.Add(importBook.Id, book.BookId);
+
+                // added to limit for initial 10 books only
+                if (i > 20)
+                {
+                    break;
+                }
+                i++;
             }
             _dbContext.SaveChanges();
             return keyValue;
@@ -274,6 +292,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             var jsonFile = System.IO.File.ReadAllText(GetFileName(UploadType.SaleReview));
             var importSaleReviews = JsonConvert.DeserializeObject<List<SaleReviewImport>>(jsonFile);
 
+            // added to limit for initial 10 sales  and 10 reviews only
+            int s = 0;
+            int r = 0;
             foreach (var importSaleReview in importSaleReviews)
             {
                 var book = _dbContext.Books.Find(bookKeyMap[importSaleReview.BookId]);
@@ -287,8 +308,18 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                         Price = importSaleReview.SalePrice.GetValueOrDefault(),
                         Books = book,
                         Members = member
-                    };
-                    _dbContext.Sales.Add(sale);
+                    };                    
+
+                    // added to limit for initial 10 sales only
+                    if ((s > 10) && (r > 10))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        _dbContext.Sales.Add(sale);
+                    }
+                    s++;
                 }
                 if (importSaleReview.ReviewDate.HasValue)
                 {
@@ -301,10 +332,20 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                         Books = book,
                         Members = member
                     };
-                    _dbContext.Reviews.Add(review);
-                }
-                _dbContext.SaveChanges();
+                    
+                    // added to limit for initial 10 sales only
+                    if ((s > 10) && (r > 10))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        _dbContext.Reviews.Add(review);
+                    }
+                    r++;
+                }                
             }
+            _dbContext.SaveChanges();
         }
 
     }
