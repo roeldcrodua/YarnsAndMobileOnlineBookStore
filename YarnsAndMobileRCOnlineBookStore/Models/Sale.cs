@@ -18,6 +18,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Models
         [DisplayName("Purchased Date")]
         public DateTime PurchaseDate { get; set; }
 
+        [DisplayName("Quantity")]
+        public int Quantity { get; set; }
+
         [DisplayName("Sale Price")]
         [Column(TypeName = "decimal(5,2)")]
         public decimal Price { get; set; }
