@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
-namespace YarnsAndMobileRCOnlineBookStore.Migrations
+namespace YarnsAndMobileRCOnlineBookStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210324060343_ResettingDB")]
-    partial class ResettingDB
+    [Migration("20210326035311_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -50,8 +50,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "580b5fad-1571-464d-a342-0c4b9ef7bd12",
-                            ConcurrencyStamp = "2c40f595-fd49-464b-a7d9-764a5c1806d9",
+                            Id = "bd95e7ee-9c31-4ca2-b54e-b29fb36350e2",
+                            ConcurrencyStamp = "426fc22a-7fa6-4109-94a6-8a65a0263551",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -466,6 +466,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderId");
 

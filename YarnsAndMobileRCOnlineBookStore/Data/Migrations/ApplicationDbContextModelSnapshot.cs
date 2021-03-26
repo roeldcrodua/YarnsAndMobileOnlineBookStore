@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YarnsAndMobileRCOnlineBookStore.Data;
 
-namespace YarnsAndMobileRCOnlineBookStore.Migrations
+namespace YarnsAndMobileRCOnlineBookStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210218003751_ResetDatabase")]
-    partial class ResetDatabase
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,8 +48,8 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5a834a61-f473-41e4-8b2d-e423009a5bdb",
-                            ConcurrencyStamp = "d0072cc2-79ef-44ce-8fd6-f1a33d855fb6",
+                            Id = "bd95e7ee-9c31-4ca2-b54e-b29fb36350e2",
+                            ConcurrencyStamp = "426fc22a-7fa6-4109-94a6-8a65a0263551",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -466,6 +464,9 @@ namespace YarnsAndMobileRCOnlineBookStore.Migrations
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderId");
 

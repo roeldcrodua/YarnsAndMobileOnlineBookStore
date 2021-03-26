@@ -1,22 +1,21 @@
 {
   "dependencies": {
-    "mssql3": {
-      "type": "mssql",
-      "connectionId": "DefaultConnection2",
-      "suggestion": "true",
-      "ignored": "true"
-    },
     "mssql1": {
-      "type": "mssql",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/yarnsandmobilerc/databases/yarnsandmobilercdb",
+      "type": "mssql.azure",
       "connectionId": "DefaultConnection",
-      "suggestion": "true",
-      "ignored": "true"
+      "secretStore": "AzureAppSettings"
     },
-    "storage1": {
-      "type": "storage",
-      "connectionId": "AzureStorageAccountConnection",
-      "suggestion": "true",
-      "ignored": "true"
+    "mssql2": {
+      "type": "mssql.onprem",
+      "connectionId": "DefaultConnection1",
+      "secretStore": "AzureAppSettings"
+    },
+    "appInsights1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/yarnsandmobilerc",
+      "type": "appInsights.azure",
+      "connectionId": "APPINSIGHTS_CONNECTIONSTRING",
+      "secretStore": "AzureAppSettings"
     }
   }
 }

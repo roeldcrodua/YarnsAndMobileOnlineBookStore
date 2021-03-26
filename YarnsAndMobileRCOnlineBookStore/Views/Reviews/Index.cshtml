@@ -25,6 +25,12 @@
 <div>
     @foreach (var item in Model)
     {
+        {
+            var user = SignInManager.IsSignedIn(User) ? UserManager.GetUserAsync(User) : null;
+            var email = SignInManager.IsSignedIn(User) ? user.Result.Email : "";
+            var forSignedInUserOnly = (!SignInManager.IsSignedIn(User) && email != item.Members.Email) || User.IsInRole("Admin") ? "invisible" : "";
+
+
         <ul>
             <li class="list-unstyled ">
                 <div class="d-inline-flex">
@@ -37,14 +43,14 @@
                         <h6 class="text-justify"><em>@Html.DisplayFor(modelItem => item.Text)</em></h6>
                         <h6>@Html.DisplayFor(modelItem => item.ReviewDate.Value.Date)</h6>
                         <h6 class="text-primary">By @Html.DisplayFor(modelItem => item.Members.Email)</h6>
-                        <a  asp-action="Edit" asp-route-id="@item.ReviewId">Edit |</a>
-                        <a  asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
+                        <a class="@forSignedInUserOnly" asp-action="Edit" asp-route-id="@item.ReviewId">Edit |</a>
+                        <a class="@forSignedInUserOnly" asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
                     </div>
 
                 </div>
             </li>
         </ul>
-
+        }
     }
 </div>
 
