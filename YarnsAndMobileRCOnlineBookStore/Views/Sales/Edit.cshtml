@@ -18,14 +18,19 @@
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Books.Title" class="control-label"></label>
+                <input asp-for="Books.Title" class="form-control" disabled />
+                <span asp-validation-for="Books.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Books.Title" class="control-label"></label>
-                <input asp-for="Books.Title" class="form-control" disabled />
-                <span asp-validation-for="Books.Title" class="text-danger"></span>
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" disabled />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div>
                 <label asp-for="Members.Email" class="control-label"></label>

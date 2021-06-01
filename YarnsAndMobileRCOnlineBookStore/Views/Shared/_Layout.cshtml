@@ -15,20 +15,21 @@
 </head>
 <body>
     <header>
-        <div class="d-inline-flex w-100">
+        <div class="d-inline-flex w-100 align-items-center">
             <img class="ml-5 mt-1" src="~/image/yarns_and_mobile_logo.png" width="170" height="90" alt="Yarns &amp; Mobile">
-            <h2 id="header" class="align-self-center">Online Book Store <em>   Since </em> 2020</h2>
+            <h2 id="header" class="align-self-center"><em>   Your </em> Online Book Store <em>   Since </em> 2020</h2>
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
+            
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto ml-auto">
                     @{
                         var user = SignInManager.IsSignedIn(User) ? UserManager.GetUserAsync(User) : null;
-                        var email = SignInManager.IsSignedIn(User) ? user.Result.Email : "";
+                        var email = !SignInManager.IsSignedIn(User) && user == null ? "admin@yarnsandmobile.com" : user.Result.Email;
+                        
                         var adminOnly = !SignInManager.IsSignedIn(User) || !User.IsInRole("Admin") ? "disabled" : "";
                         var adminDisable = User.IsInRole("Admin") || !SignInManager.IsSignedIn(User) ? "disabled" : "";
                     }

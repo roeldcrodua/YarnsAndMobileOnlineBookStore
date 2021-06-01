@@ -30,6 +30,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
         public InputModel Input { get; set; }
         public class InputModel
         {
+            private decimal price;
             public string MemberId { get; set; }
             [Display(Name = "Account Number")]
             public string AccountNumber { get; set; }
@@ -43,7 +44,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
             [Display(Name = "Purchased Date")]
 
             public DateTime PurchaseDate { get; set; }
-            public int BookId { get; set; }
+            public int Quantity { get; set; }
 
             public decimal Price { get; set; }
         }
@@ -127,7 +128,7 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     PurchaseDate = DateTime.Now.Date,
                     Price = book?.SalePrice ?? 0,
                     Title = book.Title,
-                    BookId = book.BookId,
+                    Quantity = 1,
                     AccountNumber = member.AccountNumber,
                     Email = member.Email
 
@@ -160,13 +161,14 @@ namespace YarnsAndMobileRCOnlineBookStore.Controllers
                     PurchaseDate = DateTime.Now.Date,
                     Price = book?.SalePrice ?? 0,
                     Title = book.Title,
-                    BookId = book.BookId,
+                    Quantity = 1,
                     AccountNumber = member.AccountNumber,
                     Email = member.Email
 
                 };
 
                 sale.PurchaseDate = Input.PurchaseDate;
+                sale.Quantity = Input.Quantity;
                 sale.Price = Input.Price;
                 sale.Members = member;
                 sale.Books = book;
