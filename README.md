@@ -52,3 +52,10 @@ Yarns & Mobile is a small book retailer trying to fill the gap left by a large b
 ### Note: 
 - JB are Jester Bozo's initials, but the employees think it really stands for "Jerky Boss" Yarns & Mobile has authorized their project manager, Mr. Zwickel, to answer any questions you might have and to review the code that you provide.
 
+## Added Website Overview
+
+### Home page
+![image](https://user-images.githubusercontent.com/65931708/132295727-9c08ba36-e4b4-4393-9dd6-488a71240b5f.png)
+
+### Book Index
+![image](https://user-images.githubusercontent.com/65931708/132295877-0f73d9bb-5241-4496-88fd-a7d6d50b6903.png)
